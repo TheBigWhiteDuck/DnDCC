@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Podgląd PDF (z numerami stron)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen space-y-6">
+
+  <!-- Przyciski -->
+  <button id="openPdfBtn" class="px-6 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700">
+    Otwórz cały PDF
+  </button>
+
+  <button id="openPdfSectionBtn" class="px-6 py-3 bg-green-600 text-white rounded-xl shadow-lg hover:bg-green-700">
+    Otwórz strony 19–30
+  </button>
+
+  <!-- Modal -->
+  <div id="pdfModal" class="fixed inset-0 bg-black bg-opacity-70 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 h-[85vh] flex flex-col relative">
+      
+      <!-- Pasek nagłówka -->
+      <div class="flex justify-between items-center p-4 border-b border-gray-300">
+        <h2 id="pdfTitle" class="text-lg font-semibold">Podgląd dokumentu</h2>
+        <button id="closePdfBtn" class="text-gray-500 hover:text-gray-700 text-3xl leading-none">&times;</button>
+      </div>
+
+      <!-- Kontener PDF -->
+      <div id="pdfContainer" class="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-8"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    const openAllBtn = document.getElementById('openPdfBtn');
+    const openSectionBtn = document.getElementById('openPdfSectionBtn');
+    const closeBtn = document.getElementById('closePdfBtn');
+    const modal = document.getElementById('pdfModal');
+    const container = document.getElementById('pdfContainer');
+    const title = document.getElementById('pdfTitle');
+
+    const url = "Players_Handbook.pdf";
+    let currentRender = null; // kontrola aktywnego renderowania
+
+    async function renderPdf(startPage = 1, endPage = null) {
+      // przerwij poprzednie renderowanie
+      if (currentRender) {
+        currentRender.cancelled = true;
+      }
+
+      const renderSession = { cancelled: false };
+      currentRender = renderSession;
+
+      container.innerHTML = "";
+      const pdf = await pdfjsLib.getDocument(url).promise;
+      const totalPages = pdf.numPages;
+      if (!endPage || endPage > totalPages) endPage = totalPages;
+
+      for (let i = startPage; i <= endPage; i++) {
+        if (renderSession.cancelled) return;
+
+        const page = await pdf.getPage(i);
+        const scale = 1.1;
+        const viewport = page.getViewport({ scale });
+
+        // wrapper do wyśrodkowania
+        const pageWrapper = document.createElement("div");
+        pageWrapper.classList.add("flex", "flex-col", "items-center");
+
+        // canvas (strona PDF)
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        canvas.classList.add("shadow", "rounded", "bg-white");
+        pageWrapper.appendChild(canvas);
+
+        // podpis pod stroną
+        const pageLabel = document.createElement("p");
+        pageLabel.textContent = `Strona ${i}`;
+        pageLabel.classList.add("text-sm", "text-gray-500", "mt-2");
+        pageWrapper.appendChild(pageLabel);
+
+        container.appendChild(pageWrapper);
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        if (renderSession.cancelled) return;
+      }
+
+      currentRender = null;
+    }
+
+    // Otwieranie pełnego PDF-a
+    openAllBtn.addEventListener('click', async () => {
+      title.textContent = "Podgląd całego dokumentu";
+      modal.classList.remove('hidden');
+      container.innerHTML = `<p class="text-gray-500 text-center mt-6">Ładowanie...</p>`;
+      await renderPdf(1);
+    });
+
+    // Otwieranie tylko stron 19–30
+    openSectionBtn.addEventListener('click', async () => {
+      title.textContent = "Podgląd stron 19–30";
+      modal.classList.remove('hidden');
+      container.innerHTML = `<p class="text-gray-500 text-center mt-6">Ładowanie wybranych stron...</p>`;
+      await renderPdf(19, 30);
+    });
+
+    // Zamykanie modala
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
