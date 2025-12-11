@@ -1,3 +1,4 @@
+@using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -163,35 +164,75 @@
 
     <!-- Modal user menu -->
     <div id="userModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center px-4">
-        <div class="parchment rounded-2xl w-full max-w-md relative p-6">
-            <button id="closeUser" class="absolute right-4 top-3 text-amber-800 hover:text-red-700 text-2xl leading-none">&times;</button>
-            <div class="mb-4">
-                <p class="text-sm uppercase tracking-wide text-amber-700">Profil</p>
-                <div class="flex items-center gap-3">
-                    <img id="userAvatarPreview" src="/images/konto.webp" alt="avatar" class="w-10 h-10 rounded-full border border-amber-900/30 bg-amber-100">
-                    <div>
-                        <h2 class="title-font text-2xl text-amber-900" id="userFullName">Użytkownik</h2>
-                        <p class="text-sm text-amber-800" id="userNameDisplay"></p>
+        <div class="parchment rounded-2xl w-full max-w-md relative p-6 shadow-2xl">
+            <button id="closeUser" class="absolute right-4 top-4 text-amber-800 hover:text-red-700 text-3xl leading-none transition-colors">&times;</button>
+            
+            <!-- Header with avatar and name -->
+            <div class="mb-6 text-center">
+                <div class="flex justify-center mb-3">
+                    <img id="userAvatarPreview" src="/images/konto.webp" alt="avatar" class="w-20 h-20 rounded-full border-2 border-amber-900/30 bg-amber-100 shadow-lg">
+                </div>
+                <h2 class="title-font text-2xl text-amber-900 mb-1" id="userFullName">Użytkownik</h2>
+                <p class="text-sm text-amber-700" id="userNameDisplay"></p>
+            </div>
+
+            <!-- Status badge -->
+            <div class="mb-6 flex justify-center">
+                <div class="rounded-lg border border-amber-900/30 bg-gradient-to-br from-amber-50 to-amber-100 px-4 py-2 shadow-sm">
+                    <p class="text-xs text-amber-700 uppercase tracking-wide mb-1 text-center">Status konta</p>
+                    <p class="text-center" id="userPremiumBadge">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 border border-amber-900/30 text-amber-900 text-sm font-medium">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                            </svg>
+                            Standard
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Premium upgrade button (visible only for non-premium users) -->
+            <div id="premiumUpgradeSection" class="mb-4">
+                <a href="@Url.Action("Premium","Home")" class="block text-center px-4 py-3 rounded-lg border-2 border-amber-500 bg-gradient-to-r from-yellow-100 to-amber-200 hover:from-yellow-200 hover:to-amber-300 transition-all shadow-md">
+                    <div class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 text-amber-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <span class="text-sm font-bold text-amber-900">Ulepsz do Premium</span>
                     </div>
-                </div>
+                    <p class="text-xs text-amber-700 mt-1">Odblouj więcej funkcji!</p>
+                </a>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <!-- Dodać Email -->
-                <div class="rounded-lg border border-amber-900/20 bg-white/80 p-3">
-                    <p class="text-xs text-amber-700 uppercase">Status</p>
-                    <p class="text-sm" id="userPremiumBadge"><span class="px-2 py-1 rounded bg-amber-100 border border-amber-900/20">Standard</span></p>
-                </div>
+            <!-- Quick actions -->
+            <div class="space-y-2 mb-6">
+                <p class="text-xs uppercase tracking-wide text-amber-700 mb-3 font-semibold">Szybkie akcje</p>
+                <a href="@Url.Action("Index","Character")" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg border border-amber-900/30 bg-gradient-to-r from-amber-50 to-white hover:from-amber-100 hover:to-amber-50 transition-all shadow-sm">
+                    <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="text-sm font-medium text-amber-900">Moje postacie</span>
+                </a>
+                <a href="@Url.Action("Add","Character")" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg border border-amber-900/30 bg-gradient-to-r from-amber-50 to-white hover:from-amber-100 hover:to-amber-50 transition-all shadow-sm">
+                    <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span class="text-sm font-medium text-amber-900">Stwórz nową postać</span>
+                </a>
+                <a href="@Url.Action("Index","Home")" class="nav-link flex items-center gap-3 px-4 py-3 rounded-lg border border-amber-900/30 bg-gradient-to-r from-amber-50 to-white hover:from-amber-100 hover:to-amber-50 transition-all shadow-sm">
+                    <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <span class="text-sm font-medium text-amber-900">Podręczniki</span>
+                </a>
             </div>
 
-            <div class="space-y-2">
-                <a href="@Url.Action("Index","Character")" class="nav-link block text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/10">Przejdź do „Moje postacie”</a>
-                <a href="@Url.Action("Add","Character")" class="nav-link block text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/10">Stwórz nową postać</a>
-                <a href="@Url.Action("Index","Home")" class="nav-link block text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/10">Podręczniki</a>
-            </div>
-
-            <div class="mt-4 space-y-3">
-                <button id="logoutBtn" class="btn-primary w-full py-3 rounded-xl text-sm font-semibold border border-amber-900/30">
+            <!-- Logout button -->
+            <div class="pt-4 border-t border-amber-900/20">
+                <button id="logoutBtn" class="btn-primary w-full py-3 rounded-xl text-sm font-semibold border border-amber-900/30 flex items-center justify-center gap-2 hover:scale-105 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
                     Wyloguj się
                 </button>
             </div>
@@ -276,13 +317,33 @@
 
             const fullName = `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim();
             if (userFullName) userFullName.textContent = fullName || currentUser.userName || 'Użytkownik';
-            if (userNameDisplay) userNameDisplay.textContent = currentUser.userName || '';
+            if (userNameDisplay) userNameDisplay.textContent = (currentUser.userName || 'username');
+
+            const isPrem = Boolean(currentUser.isPremium);
+            
+            // Show/hide premium upgrade button
+            if (premiumUpgradeSection) {
+                if (isPrem) {
+                    premiumUpgradeSection.classList.add('hidden');
+                } else {
+                    premiumUpgradeSection.classList.remove('hidden');
+                }
+            }
 
             if (userPremiumBadge) {
-                const isPrem = Boolean(currentUser.isPremium);
                 userPremiumBadge.innerHTML = isPrem
-                    ? '<span class="px-2 py-1 rounded bg-yellow-200 border border-amber-900/20 text-amber-900">Premium</span>'
-                    : '<span class="px-2 py-1 rounded bg-amber-100 border border-amber-900/20 text-amber-900">Standard</span>';
+                    ? `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-200 to-amber-300 border border-amber-900/30 text-amber-900 text-sm font-medium shadow-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        Premium
+                    </span>`
+                    : `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 border border-amber-900/30 text-amber-900 text-sm font-medium">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        Standard
+                    </span>`;
             }
 
             if (userAvatarPreview) {
