@@ -12,8 +12,46 @@
     Otwórz cały PDF
   </button>
 
-  <button id="openPdfSectionBtn" class="px-6 py-3 bg-green-600 text-white rounded-xl shadow-lg hover:bg-green-700">
-    Otwórz strony 19–30
+
+  <select id="raceSelect" class="px-4 py-2 border rounded">
+    <option value="Krasnoludy" data-start="19" data-end="21">Krasnoludy</option>
+    <option value="Elfy" data-start="22" data-end="26">Elfy</option>
+    <option value="Niziolki" data-start="27" data-end="29">Niziołki</option>
+    <option value="Ludzie" data-start="30" data-end="32">Ludzie</option>
+    <option value="Smokoludzie" data-start="33" data-end="35">Smokoludzie</option>
+    <option value="Gnomy" data-start="36" data-end="38">Gnomy</option>
+    <option value="PółElfy" data-start="39" data-end="40">Półelfy</option>
+    <option value="PółOrki" data-start="41" data-end="42">Półorki</option>
+    <option value="Diabelstwa" data-start="43" data-end="44">Diabelstwa</option>
+  </select>
+  <button id="selectPdfBtnRace" class="px-6 py-3 bg-green-600 text-white rounded-xl mt-4">
+    Otwórz rasę w PDF
+  </button>
+
+  <select id="classSelect" class="px-4 py-2 border rounded">
+    <option value="Barbarzyńca" data-start="47" data-end="51">Barbarzyńca</option>
+    <option value="Bard" data-start="52" data-end="56">Bard</option>
+    <option value="Kleryk" data-start="57" data-end="64">Kleryk</option>
+    <option value="Druid" data-start="65" data-end="70">Druid</option>
+    <option value="Wojownik" data-start="71" data-end="76">Wojownik</option>
+    <option value="Mnich" data-start="77" data-end="82">Mnich</option>
+    <option value="Paladyn" data-start="83" data-end="89">Pladyn</option>
+    <option value="Łotr" data-start="90" data-end="94">Łotr</option>
+    <option value="Łowca" data-start="95" data-end="99">Łowca</option>
+    <option value="Zaklinacz" data-start="100" data-end="105">Zaklinacz</option>
+    <option value="Czarnoksiężnik" data-start="106" data-end="112">Czarnoksiężnik</option>
+    <option value="Mag" data-start="113" data-end="120">Mag</option>
+  </select>
+  <button id="selectPdfBtnClass" class="px-6 py-3 bg-green-600 text-white rounded-xl mt-4">
+    Otwórz klasę w PDF
+  </button>
+
+  <button id="selectPdfBtnEq" class="px-6 py-3 bg-green-600 text-white rounded-xl mt-4">
+    Otwórz ekwipunek w PDF
+  </button>
+
+  <button id="selectPdfBtnOr" class="px-6 py-3 bg-green-600 text-white rounded-xl mt-4">
+    Otwórz pochodzenie w PDF
   </button>
 
   <!-- Modal -->
@@ -34,7 +72,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
     const openAllBtn = document.getElementById('openPdfBtn');
-    const openSectionBtn = document.getElementById('openPdfSectionBtn');
+    const selectBtnRace = document.getElementById('selectPdfBtnRace');
+    const selectBtnClass = document.getElementById('selectPdfBtnClass');
+    const orBtn = document.getElementById('selectPdfBtnOr');
+    const eqBtn = document.getElementById('selectPdfBtnEq');
+
     const closeBtn = document.getElementById('closePdfBtn');
     const modal = document.getElementById('pdfModal');
     const container = document.getElementById('pdfContainer');
@@ -100,12 +142,41 @@
       await renderPdf(1);
     });
 
-    // Otwieranie tylko stron 19–30
-    openSectionBtn.addEventListener('click', async () => {
-      title.textContent = "Podgląd stron 19–30";
+    // Otwieranie rasy
+    selectBtnRace.addEventListener('click', async () => {
+      const v = document.getElementById('raceSelect');
+      const option = v.options[v.selectedIndex];
+      title.textContent = v.value;
       modal.classList.remove('hidden');
       container.innerHTML = `<p class="text-gray-500 text-center mt-6">Ładowanie wybranych stron...</p>`;
-      await renderPdf(19, 30);
+      const start = parseInt(option.getAttribute("data-start"));
+      const end = parseInt(option.getAttribute("data-end"));
+      await renderPdf(start, end);
+    });
+
+    selectBtnClass.addEventListener('click', async () => {
+      const v = document.getElementById('classSelect');
+      const option = v.options[v.selectedIndex];
+      title.textContent = v.value;
+      modal.classList.remove('hidden');
+      container.innerHTML = `<p class="text-gray-500 text-center mt-6">Ładowanie wybranych stron...</p>`;
+      const start = parseInt(option.getAttribute("data-start"));
+      const end = parseInt(option.getAttribute("data-end"));
+      await renderPdf(start, end);
+    });
+
+    eqBtn.addEventListener('click', async () => {
+      title.textContent = "Ekwipunek";
+      modal.classList.remove('hidden');
+      container.innerHTML = `<p class="text-gray-500 text-center mt-6">Ładowanie wybranych stron...</p>`;
+      await renderPdf(144, 162);
+    });
+
+    orBtn.addEventListener('click', async () => {
+      title.textContent = "Pochodzenia";
+      modal.classList.remove('hidden');
+      container.innerHTML = `<p class="text-gray-500 text-center mt-6">Ładowanie wybranych stron...</p>`;
+      await renderPdf(126, 142);
     });
 
     // Zamykanie modala
