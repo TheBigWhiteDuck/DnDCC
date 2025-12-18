@@ -195,6 +195,24 @@ namespace Projekt.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CharacterRequest request)
         {
+            var userIdClaim = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                return Unauthorized(new { error = "Brak identyfikatora użytkownika." });
+            }
+
+            var premiumClaim = User?.FindFirst("premium")?.Value;
+            var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
+
+            if (!isPremium)
+            {
+                var existingCount = characterService.GetCharacters(currentUserId).Count();
+                if (existingCount >= 2)
+                {
+                    return BadRequest(new { error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne." });
+                }
+            }
+
             var className = request.Character.Class;
             var raceName = request.Character.Race;
             request.Character.SubClass = request.Character.SubClass ?? string.Empty;
@@ -291,15 +309,7 @@ namespace Projekt.Web.Controllers
                 }
             }
 
-            var userIdClaim = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (int.TryParse(userIdClaim, out var currentUserId))
-            {
-                request.Character.UserId = currentUserId;
-            }
-            else
-            {
-                return Unauthorized(new { error = "Brak identyfikatora użytkownika." });
-            }
+            request.Character.UserId = currentUserId;
 
             characterService.SaveCharacter(request.Character);
             return Ok(new { success = true, redirectUrl = Url.Action("Index") });

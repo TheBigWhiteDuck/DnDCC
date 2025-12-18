@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Projekt.DAL;
 using Projekt.Model.DataModels;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Projekt.Web.Controllers;
 
@@ -34,8 +36,16 @@ public class AvatarController : ControllerBase
     }
 
     [HttpPost("generate")]
+    [Authorize]
     public async Task<IActionResult> Generate([FromBody] AvatarRequest req)
     {
+        var premiumClaim = User?.FindFirst("premium")?.Value;
+        var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
+        if (!isPremium)
+        {
+            return StatusCode(403, "Tylko użytkownicy Premium mogą generować awatary postaci.");
+        }
+
         var apiKey = _config["OpenAI:ApiKey"];
         if (string.IsNullOrWhiteSpace(apiKey))
             return BadRequest(new { error = "Brak klucza OpenAI. Ustaw OpenAI:ApiKey." });

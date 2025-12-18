@@ -150,6 +150,31 @@ public class AuthService : IAuthService
         return (true, null);
     }
 
+    public async Task<(bool Success, string? Error, AuthResultVm? Result)> UpgradeToPremiumAsync(int userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+        {
+            return (false, "User not found", null);
+        }
+
+        if (!user.IsPremium)
+        {
+            user.IsPremium = true;
+            var update = await _userManager.UpdateAsync(user);
+            if (!update.Succeeded)
+            {
+                var error = string.Join("; ", update.Errors.Select(e => e.Description));
+                _logger.LogWarning("Premium upgrade failed for {userId}: {error}", userId, error);
+                return (false, error, null);
+            }
+            _logger.LogInformation("Premium upgraded for user {userId}", userId);
+        }
+
+        var result = await GenerateTokenAsync(user);
+        return (true, null, result);
+    }
+
     private async Task<User?> FindByUserNameOrEmailAsync(string userNameOrEmail)
     {
         User? user = null;

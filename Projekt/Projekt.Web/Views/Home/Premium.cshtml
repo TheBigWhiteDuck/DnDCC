@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Premium";
+}
+
+<div class="space-y-8 text-amber-900">
+    <div class="text-center space-y-2">
+        <p class="text-sm uppercase tracking-[0.35em] text-amber-700">DnD Character Creator</p>
+        <h1 class="title-font text-4xl md:text-5xl">Konto Premium</h1>
+        <p class="max-w-2xl mx-auto text-amber-800">
+            Odblokuj dodatkowe funkcje, które ułatwią prowadzenie kampanii i zarządzanie bohaterami.
+        </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+        <div class="parchment rounded-2xl p-6 border border-amber-900/30 bg-gradient-to-b from-white/70 to-amber-50/70 flex flex-col gap-3">
+            <h2 class="title-font text-2xl">Standard</h2>
+            <p class="text-sm text-amber-800">Darmowa wersja.</p>
+            <ul class="text-sm text-amber-900 list-disc list-inside space-y-1">
+                <li>Ograniczona liczba postaci</li>
+                <li>Przeglądanie podręcznika Player's Handbook</li>
+                <li>Rzut kością 3D</li>
+            </ul>
+            <div class="mt-4 text-sm text-amber-700">0 zł / miesiąc</div>
+        </div>
+
+        <div class="parchment rounded-2xl p-6 border-2 border-amber-700 bg-gradient-to-b from-amber-100/80 to-amber-50/80 shadow-xl flex flex-col gap-3 relative">
+            <div class="absolute -top-3 right-4 text-xs px-2 py-1 rounded-full bg-amber-700 text-amber-50 uppercase tracking-wide">Polecany</div>
+            <h2 class="title-font text-2xl">Premium</h2>
+            <p class="text-sm text-amber-800">Idealne dla osób regularnie grających w kampaniach.</p>
+            <ul class="text-sm text-amber-900 list-disc list-inside space-y-1">
+                <li>Zapis nieograniczonej liczby postaci</li>
+                <li>Generowanie awatarów postaci</li>
+
+            </ul>
+            <div class="mt-4 text-sm text-amber-700">9,99 zł / miesiąc</div>
+            <button type="button"
+                    class="btn-primary mt-4 px-4 py-2 rounded-xl text-sm font-semibold border border-amber-900/30 w-full"
+                    id="buyPremiumButton">
+                Przejdź do zakupu Premium
+            </button>
+            <p class="text-xs text-amber-700 mt-2">
+                Zostaniesz przekierowany do bezpiecznej strony płatności. Po zakupie Twoje konto zostanie natychmiast zaktualizowane.
+            </p>
+        </div>
+
+
+    </div>
+
+</div>
+
+@section Scripts {
+<script>
+    (() => {
+        const buyBtn = document.getElementById('buyPremiumButton');
+        const navAuthButton = document.getElementById('authButton');
+        buyBtn?.addEventListener('click', async () => {
+            const stored = localStorage.getItem('user');
+            if (!stored) {
+                // Użytkownik niezalogowany
+                navAuthButton?.click();
+                return;
+            }
+
+            buyBtn.disabled = true;
+            const originalText = buyBtn.textContent;
+            buyBtn.textContent = 'Przetwarzanie płatności...';
+
+            try {
+                const res = await fetch('/api/auth/upgrade-premium', {
+                    method: 'POST'
+                });
+
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    alert(data.error || 'Nie udało się aktywować Premium.');
+                    return;
+                }
+
+                const result = await res.json();
+                localStorage.setItem('user', JSON.stringify(result));
+                alert('Subskrypcja Premium została aktywowana na Twoim koncie.');
+                location.reload();
+            } catch (e) {
+                console.error('Upgrade premium error:', e);
+                alert('Problem z połączeniem podczas aktywacji Premium.');
+            } finally {
+                buyBtn.disabled = false;
+                buyBtn.textContent = originalText;
+            }
+        });
+    })();
+</script>
+}

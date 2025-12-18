@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Projekt.Services.Interfaces;
 using Projekt.ViewModel.VM;
+using System.Security.Claims;
 
 namespace Projekt.Web.Controllers;
 
@@ -57,6 +58,33 @@ public class AuthController : ControllerBase
     {
         Response.Cookies.Delete("access_token");
         return NoContent();
+    }
+
+    [HttpPost("upgrade-premium")]
+    [Authorize]
+    public async Task<IActionResult> UpgradePremium()
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out var userId))
+        {
+            return Unauthorized(new { error = "Invalid user context." });
+        }
+
+        var (success, error, result) = await _auth.UpgradeToPremiumAsync(userId);
+        if (!success || result is null)
+        {
+            return BadRequest(new { error = error ?? "Could not upgrade to premium." });
+        }
+
+        Response.Cookies.Append("access_token", result.Token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            Expires = result.ExpiresAt
+        });
+
+        return Ok(result);
     }
 
     [HttpPost("forgot-password")]

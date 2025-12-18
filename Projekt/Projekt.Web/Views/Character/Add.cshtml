@@ -370,7 +370,14 @@ saveBtn.addEventListener('click', async () => {
       body: JSON.stringify(payload)
     });
     if (!res.ok) {
-      showError('Blad zapisu postaci.');
+      let message = 'Blad zapisu postaci.';
+      try {
+        const err = await res.json();
+        if (err && err.error) {
+          message = err.error;
+        }
+      } catch {}
+      showError(message);
       return;
     }
     const data = await res.json();

@@ -66,31 +66,20 @@
             </div>
         </div>
 
-        <button type="button" id="accountCardTrigger"
-                class="parchment rounded-2xl p-6 flex flex-col gap-4 border border-amber-900/30 bg-gradient-to-b from-white/70 to-amber-50/70 text-left transition transform hover:-translate-y-1 hover:shadow-2xl">
+        <a href="@Url.Action("Premium", "Home")"
+           class="parchment rounded-2xl p-6 flex flex-col gap-4 border border-amber-900/30 bg-gradient-to-b from-white/70 to-amber-50/70 transition transform hover:-translate-y-1 hover:shadow-2xl">
             <div class="w-16 h-16 rounded-full border border-amber-900/20 bg-white/80 flex items-center justify-center text-amber-800">
-                <i class="fa-solid fa-user text-2xl" aria-hidden="true"></i>
-                <span class="sr-only">Moje konto</span>
+                <i class="fa-solid fa-crown text-2xl" aria-hidden="true"></i>
+                <span class="sr-only">Premium</span>
             </div>
             <div>
-                <h2 class="title-font text-2xl">Moje konto</h2>
-                <p class="text-sm text-amber-800 mt-1">Zarządzaj profilem, sprawdź status i przełącz się na tryb premium.</p>
+                <h2 class="title-font text-2xl">Konto Premium</h2>
+                <p class="text-sm text-amber-800 mt-1">Poznaj dodatkowe funkcje i zdecyduj, czy chcesz je odblokować.</p>
             </div>
             <span class="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-amber-700">
-                Otwórz panel konta
+                Przejdź do Premium
             </span>
-        </button>
+        </a>
     </div>
 </div>
 
-@section Scripts {
-<script>
-    (() => {
-        const accountTrigger = document.getElementById('accountCardTrigger');
-        const navAuthButton = document.getElementById('authButton');
-        accountTrigger?.addEventListener('click', () => {
-            navAuthButton?.click();
-        });
-    })();
-</script>
-}
