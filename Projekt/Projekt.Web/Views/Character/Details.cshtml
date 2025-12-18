@@ -1,8 +1,48 @@
+@using System.Linq
+@using System.Text.Json
 @model Projekt.Model.DataModels.Character
 @{
     ViewData["Title"] = Model.Name;
     var profs = ViewData["Proficiencies"] as IList<string> ?? new List<string>();
     var traits = ViewData["Traits"] as IList<string> ?? new List<string>();
+    Func<int, string> formatMod = score =>
+    {
+        var mod = (int)Math.Floor((score - 10) / 2.0);
+        return mod >= 0 ? $"+{mod}" : mod.ToString();
+    };
+    var profText = string.Join(", ", profs);
+    var traitText = string.Join(", ", traits);
+    var equipmentText = Model.Items != null && Model.Items.Any()
+        ? string.Join(", ", Model.Items.Select(i => $"{i.Name} × {i.Quantity}"))
+        : string.Empty;
+    var pdfFields = new Dictionary<string, string>
+    {
+        ["CharacterName"] = Model.Name ?? string.Empty,
+        ["ClassLevel"] = Model.Class ?? string.Empty,
+        ["Race "] = Model.Race ?? string.Empty,
+        ["Alignment"] = Model.Alignment ?? string.Empty,
+        ["HPMax"] = Model.MaxHP.ToString(),
+        ["HPCurrent"] = Model.CurrentHP.ToString(),
+        ["HPTemp"] = Model.TemporaryHP.ToString(),
+        ["AC"] = Model.ArmorClass.ToString(),
+        ["Speed"] = Model.Speed.ToString(),
+        ["STR"] = Model.Strength.ToString(),
+        ["DEX"] = Model.Dexterity.ToString(),
+        ["CON"] = Model.Constitution.ToString(),
+        ["INT"] = Model.Intelligence.ToString(),
+        ["WIS"] = Model.Wisdom.ToString(),
+        ["CHA"] = Model.Charisma.ToString(),
+        ["STRmod"] = formatMod(Model.Strength),
+        ["DEXmod "] = formatMod(Model.Dexterity),
+        ["CONmod"] = formatMod(Model.Constitution),
+        ["INTmod"] = formatMod(Model.Intelligence),
+        ["WISmod"] = formatMod(Model.Wisdom),
+        ["CHamod"] = formatMod(Model.Charisma),
+        ["ProficienciesLang"] = profText,
+        ["Features and Traits"] = traitText,
+        ["Equipment"] = equipmentText,
+        ["AttacksSpellcasting"] = Model.Notes ?? string.Empty
+    };
 }
 <div class="space-y-6">
     <div class="flex items-center justify-between">
@@ -29,7 +69,10 @@
             </button>
         </div>
     </div>
-    <div class="flex justify-end">
+    <div class="flex flex-wrap justify-end gap-2">
+        <button type="button" id="downloadCharacterPdf" class="px-4 py-2 rounded-lg text-sm border border-amber-900/30 bg-amber-100 text-amber-900 hover:bg-amber-200">
+            Pobierz kartę PDF
+        </button>
         <form method="post" action="@Url.Action("Delete","Character")">
             <input type="hidden" name="id" value="@Model.Id" />
             <button type="submit" class="px-4 py-2 rounded-lg text-sm border border-red-900/30 bg-red-100 text-red-800 hover:bg-red-200">
@@ -65,10 +108,20 @@
     <div>
         <h3 class="title-font text-lg text-amber-900 mb-2">Ekwipunek</h3>
         <ul class="space-y-1 text-sm">
-        @foreach (var item in Model.Items) {
-            <li class="flex justify-between bg-amber-50 border border-amber-900/15 rounded px-3 py-2">
-                <span>@item.Name</span>
-                <span class="text-amber-800">x @item.Quantity</span>
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <li class="flex justify-between bg-amber-50 border border-amber-900/15 rounded px-3 py-2">
+                    <span>@item.Name</span>
+                    <span class="text-amber-800">x @item.Quantity</span>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="bg-amber-50 border border-amber-900/15 rounded px-3 py-2 text-amber-800 italic">
+                Brak zapisanych przedmiotów.
             </li>
         }
         </ul>
@@ -89,6 +142,7 @@
 </div>
 
 @section Scripts {
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script>
     const avatarBtn = document.getElementById('generateAvatar');
     const avatarImg = document.getElementById('avatarPreview');
@@ -172,5 +226,47 @@
             alert("Błąd połączenia z serwerem.");
         }
     }
+</script>
+<script>
+    const pdfButton = document.getElementById('downloadCharacterPdf');
+    const pdfFields = @Html.Raw(JsonSerializer.Serialize(pdfFields));
+
+    pdfButton?.addEventListener('click', async () => {
+        const originalText = pdfButton.textContent;
+        pdfButton.disabled = true;
+        pdfButton.textContent = 'Generowanie...';
+        try {
+            const response = await fetch('/pdfs/5E_CharacterSheet_Fillable.pdf');
+            if (!response.ok) {
+                throw new Error('Brak pliku szablonu (pdfs/5E_CharacterSheet_Fillable.pdf).');
+            }
+            const existingPdfBytes = await response.arrayBuffer();
+            const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+            const form = pdfDoc.getForm();
+            Object.entries(pdfFields).forEach(([key, value]) => {
+                try {
+                    const field = form.getField(key);
+                    field.setText(value ?? '');
+                } catch (err) {
+                    console.warn('Nie można uzupełnić pola', key, err);
+                }
+            });
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${pdfFields.CharacterName || 'Bohater'}-karta.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        } catch (error) {
+            console.error(error);
+            alert('Nie udało się wygenerować PDF: ' + error.message);
+        } finally {
+            pdfButton.disabled = false;
+            pdfButton.textContent = originalText;
+        }
+    });
 </script>
 }

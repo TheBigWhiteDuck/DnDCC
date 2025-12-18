@@ -140,6 +140,11 @@ app.MapControllerRoute(
     defaults: new { controller = "Home", action = "HomePage" });
 
 app.MapControllerRoute(
+    name: "dice",
+    pattern: "Dice",
+    defaults: new { controller = "Home", action = "Dice" });
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=HomePage}/{id?}");
 

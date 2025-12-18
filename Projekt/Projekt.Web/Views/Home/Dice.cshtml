@@ -1,0 +1,273 @@
+@{
+    ViewData["Title"] = "Rzuć kością";
+    var diceOptions = new[] { 4, 6, 8, 10, 12, 20, 100 };
+}
+
+@section Styles {
+    <style>
+        .dice-scene {
+            width: 140px;
+            height: 140px;
+            perspective: 900px;
+        }
+        .dice-cube {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(.25, .8, .25, 1);
+        }
+        .dice-face {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(145deg, rgba(31,20,13,0.9), rgba(59,38,26,0.9));
+            border: 2px solid rgba(200,155,79,0.35);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: #f8e8ce;
+            box-shadow: inset 0 8px 25px rgba(0,0,0,0.45);
+            backface-visibility: hidden;
+        }
+        .dice-face.front { transform: rotateY(0deg) translateZ(70px); }
+        .dice-face.back { transform: rotateY(180deg) translateZ(70px); }
+        .dice-face.right { transform: rotateY(90deg) translateZ(70px); }
+        .dice-face.left { transform: rotateY(-90deg) translateZ(70px); }
+        .dice-face.top { transform: rotateX(90deg) translateZ(70px); }
+        .dice-face.bottom { transform: rotateX(-90deg) translateZ(70px); }
+
+        .dice-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .dice-option span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 72px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(78,47,31,0.45);
+            background: rgba(255,255,255,0.8);
+            color: #2d1b1b;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: background .2s ease, transform .2s ease, color .2s ease;
+        }
+        .dice-option input:checked + span {
+            background: linear-gradient(135deg, #b68946, #d6b06b);
+            color: #2b1c10;
+            border-color: rgba(78,47,31,0.65);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        .roll-pulse {
+            animation: rollPulse 1s ease-in-out infinite;
+        }
+        @@keyframes rollPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.97); }
+        }
+    </style>
+}
+
+<div class="space-y-8 text-amber-900">
+    <div class="text-center space-y-2">
+        <p class="text-sm uppercase tracking-[0.35em] text-amber-700">Narzędzia Mistrza Gry</p>
+        <h1 class="title-font text-4xl md:text-5xl">Rzuć kością</h1>
+        <p class="max-w-2xl mx-auto text-amber-800">
+            Zainspirowana klasycznym stołem RPG – animowana kostka, wybór kości i historia rzutów w jednym miejscu.
+        </p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+        <div class="lg:col-span-1 parchment rounded-2xl p-6 border border-amber-900/30 bg-gradient-to-b from-white/80 to-amber-50/70">
+            <h2 class="title-font text-2xl mb-3">Jak to działa?</h2>
+            <ul class="space-y-3 text-sm text-amber-800">
+                <li class="flex gap-3">
+                    <span class="text-amber-700 font-semibold">1.</span>
+                    Wybierz rodzaj kostki – od d4 aż po legendarne d100.
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-amber-700 font-semibold">2.</span>
+                    Kliknij „Rzuć kością”, aby zobaczyć animację i wynik.
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-amber-700 font-semibold">3.</span>
+                    Śledź ostatnie rezultaty w panelu historii.
+                </li>
+            </ul>
+
+            <div class="mt-6 rounded-xl border border-amber-900/20 bg-white/70 p-4 text-sm text-amber-800 space-y-2">
+                <p class="font-semibold uppercase text-xs tracking-wide text-amber-700">Wskazówki</p>
+                <p>Przytrzymaj przycisk, aby poczuć klimat stołu. Każdy rzut zapisywany jest w kronice pod podsumowaniem.</p>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 parchment rounded-2xl p-6 border border-amber-900/30 bg-gradient-to-b from-white/90 to-amber-50/80">
+            <div class="grid gap-8 md:grid-cols-2">
+                <div class="flex flex-col items-center gap-4 text-center">
+                    <div class="dice-scene">
+                        <div class="dice-cube" id="diceCube">
+                            <div class="dice-face front dice-face-value">d?</div>
+                            <div class="dice-face back dice-face-value">d?</div>
+                            <div class="dice-face right dice-face-value">d?</div>
+                            <div class="dice-face left dice-face-value">d?</div>
+                            <div class="dice-face top dice-face-value">d?</div>
+                            <div class="dice-face bottom dice-face-value">d?</div>
+                        </div>
+                    </div>
+                    <div class="text-sm uppercase tracking-[0.2em] text-amber-700">Aktualna kostka</div>
+                    <div id="currentDiceLabel" class="title-font text-3xl text-amber-900">d6</div>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-sm uppercase tracking-wide text-amber-700 mb-3">Wybierz kostkę</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach (var sides in diceOptions)
+                            {
+                                var diceId = $"dice-{sides}";
+                                <label class="dice-option relative cursor-pointer">
+                                    <input type="radio" name="diceType" value="@sides" @(sides == 6 ? "checked" : null) id="@diceId" />
+                                    <span>@($"d{sides}")</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <button id="rollDiceButton" class="btn-primary w-full py-3 rounded-xl text-sm font-semibold border border-amber-900/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-dice-d20"></i>
+                            Rzuć kością
+                        </button>
+                        <div class="text-center text-sm text-amber-700">
+                            Animacja trwa ułamek sekundy – wynik pojawi się natychmiast po zatrzymaniu.
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl border border-amber-900/25 bg-white/80 p-4">
+                        <div class="text-xs uppercase tracking-wide text-amber-700">Wynik rzutu</div>
+                        <div class="title-font text-4xl text-amber-900 mt-2" id="rollResult">-</div>
+                        <div class="mt-3 text-sm text-amber-800" id="rollDescription">Wybierz kostkę i rozpocznij przygodę.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-amber-700">Historia</p>
+                        <h3 class="title-font text-xl text-amber-900">Ostatnie rzuty</h3>
+                    </div>
+                    <button id="clearHistoryButton" class="text-xs uppercase tracking-wide text-amber-700 hover:text-amber-900 underline">
+                        Wyczyść
+                    </button>
+                </div>
+                <ul id="rollHistory" class="divide-y divide-amber-900/10 text-sm text-amber-800">
+                    <li class="py-2 text-amber-700 italic">Brak zapisanych wyników.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    (() => {
+        const cube = document.getElementById('diceCube');
+        const defaultTransition = cube ? cube.style.transition : '';
+        const faces = document.querySelectorAll('.dice-face-value');
+        const rollButton = document.getElementById('rollDiceButton');
+        const resultText = document.getElementById('rollResult');
+        const description = document.getElementById('rollDescription');
+        const historyList = document.getElementById('rollHistory');
+        const currentDiceLabel = document.getElementById('currentDiceLabel');
+        const clearHistoryButton = document.getElementById('clearHistoryButton');
+        let history = [];
+
+        function selectedSides() {
+            const selected = document.querySelector('input[name="diceType"]:checked');
+            return selected ? parseInt(selected.value, 10) : 6;
+        }
+
+        function rotateCube() {
+            const rotateX = Math.random() * 360 + 360;
+            const rotateY = Math.random() * 360 + 360;
+            cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
+        function resetCubePosition() {
+            if (!cube) return;
+            cube.style.transition = 'none';
+            cube.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            requestAnimationFrame(() => {
+                cube.style.transition = defaultTransition;
+            });
+        }
+
+        function updateFaces(value) {
+            faces.forEach(face => face.textContent = value);
+        }
+
+        function renderHistory() {
+            if (!history.length) {
+                historyList.innerHTML = '<li class="py-2 text-amber-700 italic">Brak zapisanych wyników.</li>';
+                return;
+            }
+
+            historyList.innerHTML = history
+                .map(item => `<li class="py-2 flex justify-between"><span>d${item.dice}</span><span class="font-semibold text-amber-900">${item.value}</span></li>`)
+                .join('');
+        }
+
+        function addHistoryEntry(entry) {
+            history = [entry, ...history].slice(0, 6);
+            renderHistory();
+        }
+
+        function handleDiceChange() {
+            const sides = selectedSides();
+            currentDiceLabel.textContent = `d${sides}`;
+            updateFaces(`d${sides}`);
+            resultText.textContent = '-';
+            description.textContent = 'Wybierz kostkę i rozpocznij przygodę.';
+        }
+
+        function rollDice() {
+            rollButton.disabled = true;
+            rollButton.classList.add('roll-pulse');
+            const sides = selectedSides();
+            rotateCube();
+
+            setTimeout(() => {
+                const value = Math.floor(Math.random() * sides) + 1;
+                updateFaces(value);
+                resultText.textContent = value;
+                description.textContent = `Wynik rzutu kością d${sides}.`;
+                addHistoryEntry({ dice: sides, value });
+                resetCubePosition();
+                rollButton.disabled = false;
+                rollButton.classList.remove('roll-pulse');
+            }, 900);
+        }
+
+        rollButton?.addEventListener('click', rollDice);
+        document.querySelectorAll('input[name="diceType"]').forEach(radio => {
+            radio.addEventListener('change', handleDiceChange);
+        });
+        clearHistoryButton?.addEventListener('click', () => {
+            history = [];
+            renderHistory();
+        });
+
+        handleDiceChange();
+        renderHistory();
+    })();
+</script>
+}

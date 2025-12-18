@@ -197,9 +197,8 @@ namespace Projekt.Web.Controllers
         {
             var className = request.Character.Class;
             var raceName = request.Character.Race;
-            // zapewnij wartość SubClass żeby nie wpadło NULL do bazy
-            //request.Character.SubClass = request.Character.SubClass ?? string.Empty;
-            //request.Character.Spells = request.Character.Spells ?? string.Empty;
+            request.Character.SubClass = request.Character.SubClass ?? string.Empty;
+            request.Character.Spells = request.Character.Spells ?? string.Empty;
 
             request.Character.Proficiencies = request.Proficiencies;
 

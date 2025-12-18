@@ -42,14 +42,15 @@
         summary { list-style: none; }
         summary::-webkit-details-marker { display: none; }
     </style>
+    @RenderSection("Styles", required: false)
 </head>
 <body class="min-h-screen flex flex-col">
     <header class="border-b border-amber-900/30 bg-black/40 backdrop-blur sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between text-amber-100">
-            <a href="@Url.Action("Index","Home")" class="title-font text-xl tracking-wide">DnDCC</a>
+            <a href="@Url.Action("HomePage","Home")" class="title-font text-xl tracking-wide">DnDCC</a>
             <nav id="mainNav" class="grid gap-3 text-sm uppercase tracking-wide items-center">
-                <a class="nav-link text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/30 whitespace-nowrap min-w-[140px]" href="/HomePage">Strona główna</a>
                 <a class="nav-link text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/30 whitespace-nowrap min-w-[140px]" href="@Url.Action("Index","Home")">Podręczniki</a>
+                <a class="nav-link text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/30 whitespace-nowrap min-w-[140px]" href="@Url.Action("Dice","Home")">Rzuć kością</a>
                 <a id="navMyCharacters" class="nav-link text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/30 whitespace-nowrap min-w-[140px] hidden" href="@Url.Action("Index","Character")">Moje postacie</a>
                 <a id="navCreateCharacter" class="nav-link text-center px-3 py-2 rounded-lg border border-amber-900/40 bg-black/30 whitespace-nowrap min-w-[140px] hidden" href="@Url.Action("Add","Character")">Stwórz postać</a>
                 <div id="helpMenu" class="relative">
