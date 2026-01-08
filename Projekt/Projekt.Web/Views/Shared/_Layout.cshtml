@@ -4,6 +4,23 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - DnDCC</title>
+    <script>
+        // Apply saved theme as early as possible to avoid a flash of the default theme.
+        (() => {
+            try {
+                const userData = localStorage.getItem('user');
+                if (!userData) return;
+                const user = JSON.parse(userData);
+                const identifier = (user?.id || user?.userId || user?.email || user?.userName || 'guest').toString();
+                const theme = localStorage.getItem(`dndcc.theme.${identifier}`) || 'default';
+                if (theme && theme !== 'default') {
+                    document.documentElement.dataset.theme = theme;
+                }
+            } catch {
+                // ignore
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +34,96 @@
             --panel-border: #d7c9b8;
             --accent: #c89b4f;
             --accent-dark: #4e2f1f;
+
+            /* Theme palette used to remap common Tailwind amber utilities */
+            --theme-text-900: #78350f;
+            --theme-text-800: #92400e;
+            --theme-text-700: #b45309;
+            --theme-text-100: #fef3c7;
+            --theme-text-50: #fffbeb;
+
+            --theme-surface-50: #fffbeb;
+            --theme-surface-100: #fef3c7;
+            --theme-surface-200: #fde68a;
+
+            --theme-border-rgb: 78 47 31;
+
+            --btn-1: #b68946;
+            --btn-2: #d6b06b;
+        }
+
+        html[data-theme="night"] {
+            --bg: linear-gradient(135deg, #070a12 0%, #121a2a 45%, #1a1a26 100%);
+            /* Make panels/windows dark so light text stays readable */
+            --panel: #0e1729;
+            --panel-border: rgb(var(--theme-border-rgb) / 0.35);
+            --accent: #8fb3ff;
+            --accent-dark: #2f3b55;
+
+            --theme-text-900: #e6eefc;
+            --theme-text-800: #d6e2ff;
+            --theme-text-700: #b9ceff;
+            --theme-text-100: #0b1220;
+            --theme-text-50: #0b1220;
+
+            --theme-surface-50: #0e1729;
+            --theme-surface-100: #111f38;
+            --theme-surface-200: #172a4a;
+
+            --theme-border-rgb: 143 179 255;
+
+            --btn-1: #5b8cff;
+            --btn-2: #9bbcff;
+        }
+
+        /* Remap the most-used Tailwind amber utilities so the theme affects the whole app.
+           Scoped to html[data-theme] to avoid breaking default styling. */
+        html[data-theme] .text-amber-900 { color: var(--theme-text-900) !important; }
+        html[data-theme] .text-amber-800 { color: var(--theme-text-800) !important; }
+        html[data-theme] .text-amber-700 { color: var(--theme-text-700) !important; }
+        html[data-theme] .text-amber-100 { color: var(--theme-text-100) !important; }
+        html[data-theme] .text-amber-50 { color: var(--theme-text-50) !important; }
+
+        html[data-theme] .bg-amber-50 { background-color: var(--theme-surface-50) !important; }
+        html[data-theme] .bg-amber-100 { background-color: var(--theme-surface-100) !important; }
+        html[data-theme] .bg-amber-200 { background-color: var(--theme-surface-200) !important; }
+
+        /* Common translucent whites used as "window" backgrounds */
+        html[data-theme] .bg-white\/60 { background-color: rgb(14 23 41 / 0.6) !important; }
+        html[data-theme] .bg-white\/70 { background-color: rgb(14 23 41 / 0.7) !important; }
+        html[data-theme] .bg-white\/80 { background-color: rgb(14 23 41 / 0.8) !important; }
+        html[data-theme] .bg-white\/90 { background-color: rgb(14 23 41 / 0.9) !important; }
+
+        /* Gradient helpers used across the views */
+        html[data-theme] .from-amber-50 { --tw-gradient-from: var(--theme-surface-50) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        html[data-theme] .from-amber-100 { --tw-gradient-from: var(--theme-surface-100) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        html[data-theme] .to-amber-50 { --tw-gradient-to: var(--theme-surface-50) var(--tw-gradient-to-position) !important; }
+        html[data-theme] .to-amber-100 { --tw-gradient-to: var(--theme-surface-100) var(--tw-gradient-to-position) !important; }
+        html[data-theme] .to-amber-200 { --tw-gradient-to: var(--theme-surface-200) var(--tw-gradient-to-position) !important; }
+
+        /* Opacity gradient variants used in cards */
+        html[data-theme] .from-white\/70 { --tw-gradient-from: rgb(14 23 41 / 0.7) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        html[data-theme] .to-amber-50\/70 { --tw-gradient-to: rgb(14 23 41 / 0.7) var(--tw-gradient-to-position) !important; }
+        html[data-theme] .from-amber-100\/80 { --tw-gradient-from: rgb(17 31 56 / 0.8) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        html[data-theme] .to-amber-50\/80 { --tw-gradient-to: rgb(14 23 41 / 0.8) var(--tw-gradient-to-position) !important; }
+
+        /* Border opacity variants used heavily (escape the '/' in class names) */
+        html[data-theme] .border-amber-900\/20 { border-color: rgb(var(--theme-border-rgb) / 0.2) !important; }
+        html[data-theme] .border-amber-900\/25 { border-color: rgb(var(--theme-border-rgb) / 0.25) !important; }
+        html[data-theme] .border-amber-900\/30 { border-color: rgb(var(--theme-border-rgb) / 0.3) !important; }
+        html[data-theme] .border-amber-900\/40 { border-color: rgb(var(--theme-border-rgb) / 0.4) !important; }
+        html[data-theme] .border-amber-700 { border-color: rgb(var(--theme-border-rgb) / 0.65) !important; }
+
+        /* Make form controls readable on dark surfaces */
+        html[data-theme] input,
+        html[data-theme] select,
+        html[data-theme] textarea {
+            color: var(--theme-text-900) !important;
+            background-color: var(--theme-surface-50) !important;
+        }
+        html[data-theme] input::placeholder,
+        html[data-theme] textarea::placeholder {
+            color: rgb(185 206 255 / 0.75) !important;
         }
         body {
             font-family: 'Crimson Pro', serif;
@@ -32,7 +139,7 @@
         .nav-link { transition: color .2s ease, transform .2s ease; }
         .nav-link:hover { color: var(--accent); transform: translateY(-1px); }
         .btn-primary {
-            background: linear-gradient(135deg, #b68946, #d6b06b);
+            background: linear-gradient(135deg, var(--btn-1), var(--btn-2));
             color: #2b1c10;
             box-shadow: 0 8px 18px rgba(0,0,0,0.25);
         }
@@ -208,6 +315,19 @@
                 </div>
             </div>
 
+            <!-- Personalizacja -->
+            <div id="themeSection" class="mb-6">
+                <p class="text-xs uppercase tracking-wide text-amber-700 mb-3 font-semibold">Personalizacja</p>
+                <div>
+                    <label class="text-sm text-amber-900 font-medium">Motyw strony</label>
+                    <select id="themeSelect" class="w-full mt-1 px-3 py-2 border border-amber-900/20 rounded-lg bg-white/90">
+                        <option value="default">Domyślny</option>
+                        <option value="night">Ciemny</option>
+                    </select>
+                    <p class="text-xs text-amber-700 mt-2">Ustawienie zapisywane dla Twojego konta.</p>
+                </div>
+            </div>
+
             <!-- Premium upgrade button (visible only for non-premium users) -->
             <div id="premiumUpgradeSection" class="mb-4">
                 <a href="@Url.Action("Premium","Home")" class="block text-center px-4 py-3 rounded-lg border-2 border-amber-500 bg-gradient-to-r from-yellow-100 to-amber-200 hover:from-yellow-200 hover:to-amber-300 transition-all shadow-md">
@@ -285,6 +405,11 @@
         const passwordModalTitle = document.getElementById('passwordModalTitle');
         const passwordModalSubtitle = document.getElementById('passwordModalSubtitle');
 
+        const premiumUpgradeSection = document.getElementById('premiumUpgradeSection');
+        const userPremiumBadge = document.getElementById('userPremiumBadge');
+        const userAvatarPreview = document.getElementById('userAvatarPreview');
+        const themeSelect = document.getElementById('themeSelect');
+
         const sendResetTokenBtn = document.getElementById('sendResetTokenBtn');
         const resetPasswordBtn = document.getElementById('resetPasswordBtn');
         const forgotEmail = document.getElementById('forgotEmail');
@@ -299,6 +424,38 @@
 
         let mode = 'login';
         let currentUser = null;
+
+        function userThemeStorageKey(user) {
+            const identifier = (user?.id || user?.userId || user?.email || user?.userName || 'guest').toString();
+            return `dndcc.theme.${identifier}`;
+        }
+
+        function readSavedTheme(user) {
+            const saved = localStorage.getItem(userThemeStorageKey(user));
+            return saved || 'default';
+        }
+
+        function saveTheme(user, theme) {
+            localStorage.setItem(userThemeStorageKey(user), theme || 'default');
+        }
+
+        function applyTheme(theme) {
+            const normalized = theme || 'default';
+            if (normalized === 'default') {
+                delete document.documentElement.dataset.theme;
+                return;
+            }
+            document.documentElement.dataset.theme = normalized;
+        }
+
+        function syncThemeUi() {
+            if (!themeSelect) return;
+            if (!currentUser) {
+                themeSelect.value = 'default';
+                return;
+            }
+            themeSelect.value = readSavedTheme(currentUser);
+        }
 
         const fields = {
             user: document.getElementById('authUser'),
@@ -326,7 +483,10 @@
             const userData = localStorage.getItem('user');
             if (userData) {
                 currentUser = JSON.parse(userData);
+                applyTheme(readSavedTheme(currentUser));
                 updateUIForLoggedIn();
+            } else {
+                applyTheme('default');
             }
             updateNavigation();
         }
@@ -369,6 +529,8 @@
             if (userAvatarPreview) {
                 userAvatarPreview.src = currentUser.avatarUrl || '/images/konto.webp';
             }
+
+            syncThemeUi();
         }
 
         function setMode(newMode) {
@@ -457,7 +619,16 @@
             authButtonText.textContent = 'LOGOWANIE/REJESTRACJA';
             userModal.classList.add('hidden');
             updateNavigation();
+            applyTheme('default');
+            syncThemeUi();
             location.href = '@Url.Action("Index","Home")';
+        });
+
+        themeSelect?.addEventListener('change', () => {
+            if (!currentUser) return;
+            const theme = themeSelect.value || 'default';
+            saveTheme(currentUser, theme);
+            applyTheme(theme);
         });
 
         authSubmit?.addEventListener('click', async () => {
