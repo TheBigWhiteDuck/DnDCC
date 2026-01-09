@@ -572,170 +572,30 @@ namespace Projekt.Web.Controllers
             }
             return Json(choices);
         } 
-        /*
-        [HttpGet]
-        public async Task<IActionResult> GetItems(string className)
-        {
-            if (string.IsNullOrEmpty(className))
-                return BadRequest("Missing class name");
 
-            var classResponse = await _httpClient.GetStringAsync(
-                $"https://www.dnd5eapi.co/api/2014/classes/{className}/"
-            );
-
-            using var doc = JsonDocument.Parse(classResponse);
-            if (
-                !doc.RootElement.TryGetProperty(
-                    "starting_equipment_options",
-                    out var equipmentOptions
-                )
-            )
-                return NotFound("No starting equipment options found for this class.");
-
-            var choices = new List<ItemChoiceModel>();
-
-            foreach (var choice in equipmentOptions.EnumerateArray())
-            {
-                var desc = choice.GetProperty("desc").GetString();
-                var choose = choice.GetProperty("choose").GetInt32();
-                var from = choice.GetProperty("from");
-
-                var itemSets = new List<ItemSet>();
-                var optionSetType = from.GetProperty("option_set_type").GetString();
-
-                // --- Obsługa "options_array" ---
-                if (optionSetType == "options_array")
-                {
-                    foreach (var option in from.GetProperty("options").EnumerateArray())
-                    {
-                        var items = new List<ItemModel>();
-
-                        var optionType = option.GetProperty("option_type").GetString();
-
-                        switch (optionType)
-                        {
-                            case "counted_reference":
-                                var itemRef = option.GetProperty("of");
-                                items.Add(
-                                    new ItemModel
-                                    {
-                                        Name = itemRef.GetProperty("name").GetString(),
-                                        Quantity = option.GetProperty("count").GetInt32(),
-                                    }
-                                );
-                                break;
-
-                            case "multiple":
-                                foreach (
-                                    var subItem in option.GetProperty("items").EnumerateArray()
-                                )
-                                {
-                                    var subType = subItem.GetProperty("option_type").GetString();
-                                    if (subType == "counted_reference")
-                                    {
-                                        var subRef = subItem.GetProperty("of");
-                                        items.Add(
-                                            new ItemModel
-                                            {
-                                                Name = subRef.GetProperty("name").GetString(),
-                                                Quantity = subItem.GetProperty("count").GetInt32(),
-                                            }
-                                        );
-                                    }
-                                }
-                                break;
-
-                            case "choice":
-                                var choiceDesc = option
-                                    .GetProperty("choice")
-                                    .GetProperty("desc")
-                                    .GetString();
-                                items.Add(new ItemModel { Name = choiceDesc, Quantity = 1 });
-                                break;
-
-                            default:
-                                // fallback w razie nowych struktur
-                                items.Add(new ItemModel { Name = optionType, Quantity = 1 });
-                                break;
-                        }
-
-                        itemSets.Add(new ItemSet { ChooseCount = 1, Items = items });
-                    }
-                }
-                // --- Obsługa innych typów (np. equipment_category: holy symbols) ---
-                else if (optionSetType == "equipment_category")
-                {
-                    var catName = from.GetProperty("equipment_category")
-                        .GetProperty("name")
-                        .GetString();
-                    itemSets.Add(
-                        new ItemSet
-                        {
-                            ChooseCount = 1,
-                            Items = new List<ItemModel>
-                            {
-                                new ItemModel
-                                {
-                                    Name = $"Any from category: {catName}",
-                                    Quantity = 1,
-                                },
-                            },
-                        }
-                    );
-                }
-
-                choices.Add(
-                    new ItemChoiceModel
-                    {
-                        Description = desc,
-                        ChooseCount = choose,
-                        ItemSets = itemSets,
-                    }
-                );
-            }
-
-            return Ok(choices);
+        public async Task<IActionResult> SampleHumanFighter(string name) {
+            Character character = new Character {
+                Name = name,
+                Alignment = 'lawful-neutral',
+                Strength = 16,
+                Dexterity = 13,
+                Constitution = 14,
+                Intelligence = 10,
+                Wisdom = 12,
+                Charisma = 10,
+                Race = "human",
+                Class = "fighter",
+                MaxHP = 12,
+                CurrentHP = 12,
+                TemporaryHP = 0,
+                ArmorClass = 18,
+                Speed = 30,
+                UserId = currentUserId
+            };
+            
+            characterService.SaveCharacter(character);
+            return Ok(new { success = true, redirectUrl = Url.Action("Index") });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCategoryItems(string category)
-        {
-            if (string.IsNullOrEmpty(category))
-                return BadRequest("Missing category name");
-
-            // zamiana spacji na myślniki, bo tak działa API
-            var formattedCategory = category.ToLower().Replace(" ", "-");
-
-            var url = $"https://www.dnd5eapi.co/api/2014/equipment-categories/{formattedCategory}";
-
-            try
-            {
-                var response = await _httpClient.GetAsync(url);
-
-                if (!response.IsSuccessStatusCode)
-                    return NotFound($"Category '{category}' not found.");
-
-                var json = await response.Content.ReadAsStringAsync();
-                using var doc = JsonDocument.Parse(json);
-
-                if (!doc.RootElement.TryGetProperty("equipment", out var equipmentArray))
-                    return NotFound("No equipment found in this category.");
-
-                var items = new List<ItemModel>();
-
-                foreach (var item in equipmentArray.EnumerateArray())
-                {
-                    items.Add(
-                        new ItemModel { Name = item.GetProperty("name").GetString()!, Quantity = 1 }
-                    );
-                }
-
-                return Ok(items);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error fetching category '{category}': {ex.Message}");
-            }
-        }*/
     }
 }
