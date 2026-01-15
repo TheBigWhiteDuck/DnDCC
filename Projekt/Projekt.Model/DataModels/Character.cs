@@ -15,8 +15,8 @@ public class Character
 
     public string Race {get;set;}
     public string Class {get;set;}
-    public string SubClass { get; set; } = string.Empty;
-    public string Spells { get; set; } = string.Empty;
+    //public string SubClass { get; set; } = string.Empty;
+    //public string Spells { get; set; } = string.Empty;
 
     public IList<string> Proficiencies { get; set; } = new List<string>(); // OPCJE
     public IList<string> Traits { get; set; } = new List<string>(); // UZUPEŁNIONE AUTOMATYCZNIE

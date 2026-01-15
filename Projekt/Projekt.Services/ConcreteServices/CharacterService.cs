@@ -33,13 +33,14 @@ public class CharacterService : BaseService, ICharacterService
         DbContext.SaveChanges();
     }
 
-    public void SaveCharacter(Character character) {
+    public int SaveCharacter(Character character) {
         try {
             DbContext.Characters.Add(character);
         } catch (Exception e) {
             //obsluga bledu
         }
         DbContext.SaveChanges();
+        return character.Id;
     }
 
     public void DeleteCharacter(int id)
