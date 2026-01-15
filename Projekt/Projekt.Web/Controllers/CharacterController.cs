@@ -207,7 +207,7 @@ namespace Projekt.Web.Controllers
             if (!isPremium)
             {
                 var existingCount = characterService.GetCharacters(currentUserId).Count();
-                if (existingCount >= 2)
+                if (existingCount >= 6)
                 {
                     return BadRequest(new { error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne." });
                 }
