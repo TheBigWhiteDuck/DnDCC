@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -13,9 +16,6 @@ using Microsoft.Extensions.Logging;
 using Projekt.Model.ApiResponses;
 using Projekt.Model.DataModels;
 using Projekt.Services.ConcreteServices;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Projekt.Web.Controllers
 {
@@ -43,7 +43,9 @@ namespace Projekt.Web.Controllers
 
         public IActionResult Index()
         {
-            var userIdClaim = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
             if (!int.TryParse(userIdClaim, out var currentUserId))
             {
                 return Unauthorized();
@@ -53,7 +55,8 @@ namespace Projekt.Web.Controllers
             return View(characters);
         }
 
-        public string ClearSpaces(string sentence){
+        public string ClearSpaces(string sentence)
+        {
             return sentence.Contains(" ") ? sentence.Replace(" ", "") : sentence;
         }
 
@@ -81,8 +84,10 @@ namespace Projekt.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> SaveNotes(int charId, string? notes) {
-            try {
+        public async Task<bool> SaveNotes(int charId, string? notes)
+        {
+            try
+            {
                 var character = characterService.GetCharacter(charId);
                 Console.WriteLine("Character: " + charId);
                 Console.WriteLine("Notes: " + notes);
@@ -90,16 +95,18 @@ namespace Projekt.Web.Controllers
 
                 characterService.UpdateCharacter(character);
                 return true;
-            } catch (Exception e) {
-                
             }
-            return false;    
+            catch (Exception e) { }
+            return false;
         }
 
-        public async Task<IActionResult> Equipment(int characterId){
+        public async Task<IActionResult> Equipment(int characterId)
+        {
             var character = characterService.GetCharacter(characterId);
-            
-            var response = await _httpClient.GetStringAsync($"https://www.dnd5eapi.co/api/2014/equipment");
+
+            var response = await _httpClient.GetStringAsync(
+                $"https://www.dnd5eapi.co/api/2014/equipment"
+            );
             using var itemDoc = JsonDocument.Parse(response);
             var allItems = itemDoc
                 .RootElement.GetProperty("results")
@@ -110,21 +117,22 @@ namespace Projekt.Web.Controllers
                     Value = r.GetProperty("name").GetString(),
                 })
                 .ToList();
-                
+
             ViewData["AllItems"] = allItems;
             ViewBag.CharId = characterId;
             return View("Equipment", character.Items);
         }
 
         [HttpPost]
-        public IActionResult AddEquipment(Item item){
+        public IActionResult AddEquipment(Item item)
+        {
             characterService.AddItem(item);
             var character = characterService.GetCharacter(item.CharacterId);
             return RedirectToAction("Details", character);
         }
 
-        public IActionResult RemoveEquipment(int itemId){
-
+        public IActionResult RemoveEquipment(int itemId)
+        {
             characterService.RemoveItem(itemId);
             return RedirectToAction("Index");
         }
@@ -195,7 +203,9 @@ namespace Projekt.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CharacterRequest request)
         {
-            var userIdClaim = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
             if (!int.TryParse(userIdClaim, out var currentUserId))
             {
                 return Unauthorized(new { error = "Brak identyfikatora użytkownika." });
@@ -209,14 +219,19 @@ namespace Projekt.Web.Controllers
                 var existingCount = characterService.GetCharacters(currentUserId).Count();
                 if (existingCount >= 2)
                 {
-                    return BadRequest(new { error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne." });
+                    return BadRequest(
+                        new
+                        {
+                            error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne.",
+                        }
+                    );
                 }
             }
 
             var className = request.Character.Class;
             var raceName = request.Character.Race;
-            request.Character.SubClass = request.Character.SubClass ?? string.Empty;
-            request.Character.Spells = request.Character.Spells ?? string.Empty;
+            //request.Character.SubClass = request.Character.SubClass ?? string.Empty;
+            //request.Character.Spells = request.Character.Spells ?? string.Empty;
 
             request.Character.Proficiencies = request.Proficiencies;
 
@@ -258,7 +273,7 @@ namespace Projekt.Web.Controllers
             }
 
             request.Character.ArmorClass = 10 + (int)((request.Character.Dexterity - 10) / 2);
-            
+
             request.Character.Items = new List<Item>();
 
             if (doc2.RootElement.TryGetProperty("starting_equipment", out var eqArray))
@@ -267,43 +282,47 @@ namespace Projekt.Web.Controllers
                 {
                     var itemName = eq.GetProperty("equipment").GetProperty("name").GetString();
                     var itemQuantity = eq.GetProperty("quantity").GetInt32();
-                    request.Character.Items.Add(new Item { Name = itemName, Quantity = itemQuantity});
+                    request.Character.Items.Add(
+                        new Item { Name = itemName, Quantity = itemQuantity }
+                    );
                 }
             }
-            
+
             if (request.Items != null && request.Items.Any())
             {
-                
                 Console.WriteLine("Character Items");
                 foreach (var item in request.Items)
                 {
-                    if (item.Name.Contains(";")) {
+                    if (item.Name.Contains(";"))
+                    {
                         string[] itemParts = item.Name.Split(';');
-                        foreach(var subItem in itemParts) {
+                        foreach (var subItem in itemParts)
+                        {
                             string[] parts = subItem.Split('×');
                             var subItemName = parts[0];
                             var subItemQuantity = Int32.Parse(ClearSpaces(parts[1]));
-                            
-                            request.Character.Items.Add(new Item
-                            {
-                                Name = subItemName,
-                                Quantity = subItemQuantity
-                            });
-                            Console.WriteLine("item: " + subItemName + " Quantity: " + subItemQuantity);
+
+                            request.Character.Items.Add(
+                                new Item { Name = subItemName, Quantity = subItemQuantity }
+                            );
+                            Console.WriteLine(
+                                "item: " + subItemName + " Quantity: " + subItemQuantity
+                            );
                         }
-                    } else {
-                        if (item.Name.Contains("×")) {
+                    }
+                    else
+                    {
+                        if (item.Name.Contains("×"))
+                        {
                             string[] parts = item.Name.Split('×');
                             item.Name = ClearSpaces(parts[0]);
                             item.Quantity = Int32.Parse(ClearSpaces(parts[1]));
                         }
 
-                        request.Character.Items.Add(new Item
-                        {
-                            Name = item.Name,
-                            Quantity = item.Quantity
-                        });
-                        
+                        request.Character.Items.Add(
+                            new Item { Name = item.Name, Quantity = item.Quantity }
+                        );
+
                         Console.WriteLine("item: " + item.Name + " Quantity: " + item.Quantity);
                     }
                 }
@@ -327,16 +346,25 @@ namespace Projekt.Web.Controllers
         {
             var webRoot = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
             var avatarDir = Path.Combine(webRoot, "images", "avatars");
-            if (!Directory.Exists(avatarDir)) return;
+            if (!Directory.Exists(avatarDir))
+                return;
 
             var stable = Path.Combine(avatarDir, $"avatar_{characterId}.png");
             if (System.IO.File.Exists(stable))
             {
-                try { System.IO.File.Delete(stable); } catch { }
+                try
+                {
+                    System.IO.File.Delete(stable);
+                }
+                catch { }
             }
             foreach (var file in Directory.EnumerateFiles(avatarDir, $"avatar_{characterId}_*.png"))
             {
-                try { System.IO.File.Delete(file); } catch { }
+                try
+                {
+                    System.IO.File.Delete(file);
+                }
+                catch { }
             }
         }
 
@@ -356,7 +384,6 @@ namespace Projekt.Web.Controllers
 
             foreach (var choice in proficiencyChoices.EnumerateArray())
             {
-
                 var desc = choice.GetProperty("desc").GetString();
                 var choose = choice.GetProperty("choose").GetInt32();
                 var from = choice.GetProperty("from");
@@ -366,9 +393,14 @@ namespace Projekt.Web.Controllers
 
                 foreach (var option in options.EnumerateArray())
                 {
-                    if (option.GetProperty("option_type").GetString() == "choice") {
-                        var options2 = option.GetProperty("choice").GetProperty("from").GetProperty("options");
-                        foreach (var option2 in options2.EnumerateArray()) {
+                    if (option.GetProperty("option_type").GetString() == "choice")
+                    {
+                        var options2 = option
+                            .GetProperty("choice")
+                            .GetProperty("from")
+                            .GetProperty("options");
+                        foreach (var option2 in options2.EnumerateArray())
+                        {
                             var item2 = option2.GetProperty("item");
                             optionsList.Add(
                                 new OptionModel
@@ -378,7 +410,9 @@ namespace Projekt.Web.Controllers
                                 }
                             );
                         }
-                    } else {
+                    }
+                    else
+                    {
                         var item = option.GetProperty("item");
                         optionsList.Add(
                             new OptionModel
@@ -454,15 +488,12 @@ namespace Projekt.Web.Controllers
             foreach (var item in equipmentOptions.EnumerateArray())
             {
                 items.Add(
-                    new ItemModel
-                    {
-                        Name = item.GetProperty("name").GetString(),
-                        Quantity = 1,
-                    }
+                    new ItemModel { Name = item.GetProperty("name").GetString(), Quantity = 1 }
                 );
             }
             return items;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetItems(string className)
         {
@@ -477,7 +508,7 @@ namespace Projekt.Web.Controllers
 
             // CHOOSE SET
             var choices = new List<ItemChoiceModel>();
-            
+
             foreach (var choice in equipmentOptions.EnumerateArray()) // Select: (a) a light crossbow and 20 bolts or (b) any simple weapon
             {
                 var desc = choice.GetProperty("desc").GetString();
@@ -488,14 +519,16 @@ namespace Projekt.Web.Controllers
                 Console.WriteLine("Desc: " + desc);
                 var sets = new List<ItemSet>();
                 // SETS
-                if (options_set_type.GetString() == "equipment_category") {
+                if (options_set_type.GetString() == "equipment_category")
+                {
                     // Select any from melee weapons
                     var category = from.GetProperty("equipment_category").GetProperty("index"); // Any simple weapon
                     List<ItemModel> items = await GetItemsByCategory(category.GetString());
                     ItemSet set = new ItemSet { CategoryCount = 1, CategoryItems = items };
                     sets.Add(set);
-
-                } else if (options_set_type.GetString() == "options_array") {
+                }
+                else if (options_set_type.GetString() == "options_array")
+                {
                     // Select shortbow and 20 bolts
                     // Select rapier
                     var options = from.GetProperty("options");
@@ -503,22 +536,45 @@ namespace Projekt.Web.Controllers
                     foreach (var option in options.EnumerateArray())
                     {
                         var option_type = option.GetProperty("option_type");
-                        
-                        if (option_type.GetString() == "multiple") {
+
+                        if (option_type.GetString() == "multiple")
+                        {
                             var itemSet = new ItemSet();
                             var multiple_items = option.GetProperty("items");
-                            foreach (var _item in multiple_items.EnumerateArray()) {
-                                if (_item.GetProperty("option_type").ToString() == "choice") {
-                                    var category = _item.GetProperty("choice").GetProperty("from").GetProperty("equipment_category").GetProperty("index");
-                                    var chooseCount =  _item.GetProperty("choice").GetProperty("choose").GetInt32();
-                                    List<ItemModel> items = await GetItemsByCategory(category.GetString());
+                            foreach (var _item in multiple_items.EnumerateArray())
+                            {
+                                if (_item.GetProperty("option_type").ToString() == "choice")
+                                {
+                                    var category = _item
+                                        .GetProperty("choice")
+                                        .GetProperty("from")
+                                        .GetProperty("equipment_category")
+                                        .GetProperty("index");
+                                    var chooseCount = _item
+                                        .GetProperty("choice")
+                                        .GetProperty("choose")
+                                        .GetInt32();
+                                    List<ItemModel> items = await GetItemsByCategory(
+                                        category.GetString()
+                                    );
                                     //ItemSet set = new ItemSet { ChooseCount = 0, Items = items };
                                     itemSet.CategoryCount = chooseCount;
                                     itemSet.CategoryItems.AddRange(items);
-                                } else if (_item.GetProperty("option_type").ToString() == "counted_reference") {
-                                    var item = new ItemModel {
-                                        Quantity = Int32.Parse(_item.GetProperty("count").ToString()),
-                                        Name = _item.GetProperty("of").GetProperty("name").ToString(),
+                                }
+                                else if (
+                                    _item.GetProperty("option_type").ToString()
+                                    == "counted_reference"
+                                )
+                                {
+                                    var item = new ItemModel
+                                    {
+                                        Quantity = Int32.Parse(
+                                            _item.GetProperty("count").ToString()
+                                        ),
+                                        Name = _item
+                                            .GetProperty("of")
+                                            .GetProperty("name")
+                                            .ToString(),
                                     };
                                     itemSet.RegularItems.Add(item);
                                     itemSet.RegularCount = 1;
@@ -542,22 +598,32 @@ namespace Projekt.Web.Controllers
                         else if (option_type.GetString() == "choice")
                         {
                             var item = option.GetProperty("choice").GetProperty("from");
-                            var chooseCount =  option.GetProperty("choice").GetProperty("choose").GetInt32();
+                            var chooseCount = option
+                                .GetProperty("choice")
+                                .GetProperty("choose")
+                                .GetInt32();
                             var option_set_type = item.GetProperty("option_set_type");
                             Console.WriteLine("Option set type: " + option_set_type.GetString());
                             if (option_set_type.GetString() == "equipment_category")
                             {
-                                var category = item.GetProperty("equipment_category").GetProperty("index");
+                                var category = item.GetProperty("equipment_category")
+                                    .GetProperty("index");
                                 Console.WriteLine("category: " + category);
-                                List<ItemModel> items = await GetItemsByCategory(category.GetString());
-                                ItemSet set = new ItemSet { CategoryCount = chooseCount, CategoryItems = items };
+                                List<ItemModel> items = await GetItemsByCategory(
+                                    category.GetString()
+                                );
+                                ItemSet set = new ItemSet
+                                {
+                                    CategoryCount = chooseCount,
+                                    CategoryItems = items,
+                                };
                                 Console.WriteLine("items count: " + items.Count);
                                 sets.Add(set);
                             }
                         }
                     }
                 }
-                
+
                 choices.Add(
                     new ItemChoiceModel
                     {
@@ -567,175 +633,414 @@ namespace Projekt.Web.Controllers
                     }
                 );
             }
-            foreach (var choice in choices) {
+            foreach (var choice in choices)
+            {
                 choice.Print();
             }
             return Json(choices);
-        } 
-        /*
-        [HttpGet]
-        public async Task<IActionResult> GetItems(string className)
-        {
-            if (string.IsNullOrEmpty(className))
-                return BadRequest("Missing class name");
-
-            var classResponse = await _httpClient.GetStringAsync(
-                $"https://www.dnd5eapi.co/api/2014/classes/{className}/"
-            );
-
-            using var doc = JsonDocument.Parse(classResponse);
-            if (
-                !doc.RootElement.TryGetProperty(
-                    "starting_equipment_options",
-                    out var equipmentOptions
-                )
-            )
-                return NotFound("No starting equipment options found for this class.");
-
-            var choices = new List<ItemChoiceModel>();
-
-            foreach (var choice in equipmentOptions.EnumerateArray())
-            {
-                var desc = choice.GetProperty("desc").GetString();
-                var choose = choice.GetProperty("choose").GetInt32();
-                var from = choice.GetProperty("from");
-
-                var itemSets = new List<ItemSet>();
-                var optionSetType = from.GetProperty("option_set_type").GetString();
-
-                // --- Obsługa "options_array" ---
-                if (optionSetType == "options_array")
-                {
-                    foreach (var option in from.GetProperty("options").EnumerateArray())
-                    {
-                        var items = new List<ItemModel>();
-
-                        var optionType = option.GetProperty("option_type").GetString();
-
-                        switch (optionType)
-                        {
-                            case "counted_reference":
-                                var itemRef = option.GetProperty("of");
-                                items.Add(
-                                    new ItemModel
-                                    {
-                                        Name = itemRef.GetProperty("name").GetString(),
-                                        Quantity = option.GetProperty("count").GetInt32(),
-                                    }
-                                );
-                                break;
-
-                            case "multiple":
-                                foreach (
-                                    var subItem in option.GetProperty("items").EnumerateArray()
-                                )
-                                {
-                                    var subType = subItem.GetProperty("option_type").GetString();
-                                    if (subType == "counted_reference")
-                                    {
-                                        var subRef = subItem.GetProperty("of");
-                                        items.Add(
-                                            new ItemModel
-                                            {
-                                                Name = subRef.GetProperty("name").GetString(),
-                                                Quantity = subItem.GetProperty("count").GetInt32(),
-                                            }
-                                        );
-                                    }
-                                }
-                                break;
-
-                            case "choice":
-                                var choiceDesc = option
-                                    .GetProperty("choice")
-                                    .GetProperty("desc")
-                                    .GetString();
-                                items.Add(new ItemModel { Name = choiceDesc, Quantity = 1 });
-                                break;
-
-                            default:
-                                // fallback w razie nowych struktur
-                                items.Add(new ItemModel { Name = optionType, Quantity = 1 });
-                                break;
-                        }
-
-                        itemSets.Add(new ItemSet { ChooseCount = 1, Items = items });
-                    }
-                }
-                // --- Obsługa innych typów (np. equipment_category: holy symbols) ---
-                else if (optionSetType == "equipment_category")
-                {
-                    var catName = from.GetProperty("equipment_category")
-                        .GetProperty("name")
-                        .GetString();
-                    itemSets.Add(
-                        new ItemSet
-                        {
-                            ChooseCount = 1,
-                            Items = new List<ItemModel>
-                            {
-                                new ItemModel
-                                {
-                                    Name = $"Any from category: {catName}",
-                                    Quantity = 1,
-                                },
-                            },
-                        }
-                    );
-                }
-
-                choices.Add(
-                    new ItemChoiceModel
-                    {
-                        Description = desc,
-                        ChooseCount = choose,
-                        ItemSets = itemSets,
-                    }
-                );
-            }
-
-            return Ok(choices);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCategoryItems(string category)
+        public async Task<IActionResult> SampleHumanFighter([FromBody] string name)
         {
-            if (string.IsNullOrEmpty(category))
-                return BadRequest("Missing category name");
-
-            // zamiana spacji na myślniki, bo tak działa API
-            var formattedCategory = category.ToLower().Replace(" ", "-");
-
-            var url = $"https://www.dnd5eapi.co/api/2014/equipment-categories/{formattedCategory}";
-
-            try
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
             {
-                var response = await _httpClient.GetAsync(url);
+                return Unauthorized();
+            }
 
-                if (!response.IsSuccessStatusCode)
-                    return NotFound($"Category '{category}' not found.");
+            var premiumClaim = User?.FindFirst("premium")?.Value;
+            var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
 
-                var json = await response.Content.ReadAsStringAsync();
-                using var doc = JsonDocument.Parse(json);
-
-                if (!doc.RootElement.TryGetProperty("equipment", out var equipmentArray))
-                    return NotFound("No equipment found in this category.");
-
-                var items = new List<ItemModel>();
-
-                foreach (var item in equipmentArray.EnumerateArray())
+            if (!isPremium)
+            {
+                var existingCount = characterService.GetCharacters(currentUserId).Count();
+                if (existingCount >= 2)
                 {
-                    items.Add(
-                        new ItemModel { Name = item.GetProperty("name").GetString()!, Quantity = 1 }
+                    return BadRequest(
+                        new
+                        {
+                            error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne.",
+                        }
                     );
                 }
+            }
 
-                return Ok(items);
-            }
-            catch (Exception ex)
+            List<string> proficiencies = new List<string>
             {
-                return StatusCode(500, $"Error fetching category '{category}': {ex.Message}");
+                "skill-athletics",
+                "skill-perception",
+                "light-armor",
+                "medium-armor",
+                "heavy-armor",
+                "shields",
+                "simple-weapons",
+                "martial-weapons",
+            };
+            Character character = new Character
+            {
+                Name = name,
+                Alignment = "lawful-neutral",
+                Strength = 16,
+                Dexterity = 13,
+                Constitution = 14,
+                Intelligence = 10,
+                Wisdom = 12,
+                Charisma = 10,
+                Race = "human",
+                Class = "fighter",
+                MaxHP = 12,
+                CurrentHP = 12,
+                TemporaryHP = 0,
+                ArmorClass = 18,
+                Speed = 30,
+                UserId = currentUserId,
+                Proficiencies = proficiencies,
+            };
+            int charId = characterService.SaveCharacter(character);
+            List<Item> items = new List<Item>
+            {
+                new Item("Chain Mail", 1, charId),
+                new Item("Shield", 1, charId),
+                new Item("Longsword", 1, charId),
+                new Item("Shortsword", 1, charId),
+                new Item("Light Crossbow", 1, charId),
+                new Item("Bolts", 20, charId),
+                new Item("Explorer\'s pack", 1, charId),
+            };
+            foreach (Item item in items)
+            {
+                characterService.AddItem(item);
             }
-        }*/
+            return Ok(new { success = true, redirectUrl = Url.Action("Index") });
+        }
+
+        public async Task<IActionResult> SampleHalfElfRogue([FromBody] string name)
+        {
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                return Unauthorized();
+            }
+
+            var premiumClaim = User?.FindFirst("premium")?.Value;
+            var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
+
+            if (!isPremium)
+            {
+                var existingCount = characterService.GetCharacters(currentUserId).Count();
+                if (existingCount >= 2)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne.",
+                        }
+                    );
+                }
+            }
+
+            List<string> proficiencies = new List<string>
+            {
+                "skill-stealth",
+                "skill-acrobatics",
+                "skill-sleight-of-hand",
+                "skill-perception",
+                "light-armor",
+                "simple-weapons",
+                "hand-crossbows",
+                "longswords",
+                "rapiers",
+                "shortswords",
+                "thieves-tools",
+            };
+            List<string> traits = new List<string>
+            {
+                "darkvision",
+                "fey-ancestry",
+                "skill-versatility"
+            };
+            Character character = new Character
+            {
+                Name = name,
+                Alignment = "chaotic-evil",
+                Strength = 8,
+                Dexterity = 17,
+                Constitution = 14,
+                Intelligence = 10,
+                Wisdom = 12,
+                Charisma = 14,
+                Race = "half-elf",
+                Class = "rogue",
+                MaxHP = 10,
+                CurrentHP = 10,
+                TemporaryHP = 0,
+                ArmorClass = 14,
+                Speed = 30,
+                UserId = currentUserId,
+                Proficiencies = proficiencies,
+                Traits = traits
+            };
+            int charId = characterService.SaveCharacter(character);
+            List<Item> items = new List<Item>
+            {
+                new Item("Rapier", 1, charId),
+                new Item("Shortbow", 1, charId),
+                new Item("Arrow", 20, charId),
+                new Item("Leather Armor", 1, charId),
+                new Item("Dagger", 2, charId),
+                new Item("Thieves' Tools", 1, charId),
+                new Item("Burglar\'s pack", 1, charId),
+            };
+            foreach (Item item in items)
+            {
+                characterService.AddItem(item);
+            }
+            return Ok(new { success = true, redirectUrl = Url.Action("Index") });
+        }
+
+        public async Task<IActionResult> SampleDwarfCleric([FromBody] string name)
+        {
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                return Unauthorized();
+            }
+
+            var premiumClaim = User?.FindFirst("premium")?.Value;
+            var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
+
+            if (!isPremium)
+            {
+                var existingCount = characterService.GetCharacters(currentUserId).Count();
+                if (existingCount >= 2)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne.",
+                        }
+                    );
+                }
+            }
+
+            List<string> proficiencies = new List<string>
+            {
+                "skill-medicine",
+                "skill-insight",
+                "light-armor",
+                "medium-armor",
+                "heavy-armor",
+                "shields",
+                "simple-weapons",
+            };
+            List<string> traits = new List<string>
+            {
+                "darkvision",
+                "dwarven-resilience",
+                "stonecunning",
+                "dwarven-combat-training",
+                "tool-proficiency"
+            };
+            Character character = new Character
+            {
+                Name = name,
+                Alignment = "lawful-good",
+                Strength = 14,
+                Dexterity = 10,
+                Constitution = 16,
+                Intelligence = 10,
+                Wisdom = 16,
+                Charisma = 8,
+                Race = "dwarf",
+                Class = "rogue",
+                MaxHP = 11,
+                CurrentHP = 11,
+                TemporaryHP = 0,
+                ArmorClass = 18,
+                Speed = 25,
+                UserId = currentUserId,
+                Proficiencies = proficiencies,
+                Traits = traits
+            };
+            int charId = characterService.SaveCharacter(character);
+            List<Item> items = new List<Item>
+            {
+                new Item("Chain Mail", 1, charId),
+                new Item("Shield", 1, charId),
+                new Item("Warhammer", 1, charId),
+                new Item("Holy Symbol", 1, charId),
+                new Item("Priest\'s pack", 1, charId),
+            };
+            foreach (Item item in items)
+            {
+                characterService.AddItem(item);
+            }
+            return Ok(new { success = true, redirectUrl = Url.Action("Index") });
+        }
+
+        public async Task<IActionResult> SampleElfWizard([FromBody] string name)
+        {
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                return Unauthorized();
+            }
+
+            var premiumClaim = User?.FindFirst("premium")?.Value;
+            var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
+
+            if (!isPremium)
+            {
+                var existingCount = characterService.GetCharacters(currentUserId).Count();
+                if (existingCount >= 2)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne.",
+                        }
+                    );
+                }
+            }
+
+            List<string> proficiencies = new List<string>
+            {
+                "skill-arcana",
+                "skill-investigation",
+                "daggers",
+                "quarterstaffs",
+                "light-crossbows",
+            };
+            List<string> traits = new List<string>
+            {
+                "darkvision",
+                "fey-ancestry",
+                "trance",
+                "keen-senses",
+            };
+            Character character = new Character
+            {
+                Name = name,
+                Alignment = "neutral-good",
+                Strength = 8,
+                Dexterity = 14,
+                Constitution = 14,
+                Intelligence = 16,
+                Wisdom = 12,
+                Charisma = 10,
+                Race = "elf",
+                Class = "wizard",
+                MaxHP = 8,
+                CurrentHP = 8,
+                TemporaryHP = 0,
+                ArmorClass = 12,
+                Speed = 30,
+                UserId = currentUserId,
+                Proficiencies = proficiencies,
+                Traits = traits
+            };
+            int charId = characterService.SaveCharacter(character);
+            List<Item> items = new List<Item>
+            {
+                new Item("Quarterstaff", 1, charId),
+                new Item("Dagger", 1, charId),
+                new Item("Spellbook", 1, charId),
+                new Item("Component Pouch", 1, charId),
+                new Item("Scholar\'s pack", 1, charId),
+            };
+            foreach (Item item in items)
+            {
+                characterService.AddItem(item);
+            }
+            return Ok(new { success = true, redirectUrl = Url.Action("Index") });
+        }
+
+        public async Task<IActionResult> SampleHalfOrcBarbarian([FromBody] string name)
+        {
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                return Unauthorized();
+            }
+
+            var premiumClaim = User?.FindFirst("premium")?.Value;
+            var isPremium = string.Equals(premiumClaim, "true", StringComparison.OrdinalIgnoreCase);
+
+            if (!isPremium)
+            {
+                var existingCount = characterService.GetCharacters(currentUserId).Count();
+                if (existingCount >= 2)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            error = "Konto standardowe może mieć maksymalnie 6 postaci. Usuń jedną z nich lub przejdź na konto Premium, aby tworzyć kolejne.",
+                        }
+                    );
+                }
+            }
+
+            List<string> proficiencies = new List<string>
+            {
+                "skill-athletics",
+                "skill-intimidation",
+                "light-armor",
+                "medium-armor",
+                "shields",
+                "simple-weapons",
+                "martial-weapons",
+            };
+            List<string> traits = new List<string>
+            {
+                "darkvision",
+                "savage-attacks",
+                "relentless-endurance",
+                "menacing",
+            };
+            Character character = new Character
+            {
+                Name = name,
+                Alignment = "chaotic-neutral",
+                Strength = 17,
+                Dexterity = 14,
+                Constitution = 16,
+                Intelligence = 8,
+                Wisdom = 10,
+                Charisma = 8,
+                Race = "half-orc",
+                Class = "barbarian",
+                MaxHP = 15,
+                CurrentHP = 15,
+                TemporaryHP = 0,
+                ArmorClass = 15,
+                Speed = 30,
+                UserId = currentUserId,
+                Proficiencies = proficiencies,
+                Traits = traits
+            };
+            int charId = characterService.SaveCharacter(character);
+            List<Item> items = new List<Item>
+            {
+                new Item("Greataxe", 1, charId),
+                new Item("Handaxe", 2, charId),
+                new Item("Javelin", 4, charId),
+                new Item("Explorer\'s pack", 1, charId),
+            };
+            foreach (Item item in items)
+            {
+                characterService.AddItem(item);
+            }
+            return Ok(new { success = true, redirectUrl = Url.Action("Index") });
+        }
     }
 }

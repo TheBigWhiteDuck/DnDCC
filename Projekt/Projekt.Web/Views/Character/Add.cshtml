@@ -22,6 +22,16 @@
             <label class="text-sm text-amber-900">Imie</label>
             <input name="Name" class="w-full mt-1 px-3 py-2 border border-amber-900/20 rounded-lg focus:ring focus:ring-amber-200 bg-white/90" />
         </div>
+                <div class="bg-white/70 border border-amber-900/15 rounded-lg p-3">
+          <div class="title-font text-1xl text-amber-900">Gotowe karty postaci:</div>
+          <div class="card-body">
+            <button type="button" id="generateFighter" class="btn-primary px-5 py-3 rounded-xl text-sm font-semibold border border-amber-900/30">Human Fighter</button>
+            <button type="button" id="generateRogue" class="btn-primary px-5 py-3 rounded-xl text-sm font-semibold border border-amber-900/30">Half-Elf Rogue</button>
+            <button type="button" id="generateCleric" class="btn-primary px-5 py-3 rounded-xl text-sm font-semibold border border-amber-900/30">Dwarf Cleric</button>
+            <button type="button" id="generateWizard" class="btn-primary px-5 py-3 rounded-xl text-sm font-semibold border border-amber-900/30">Elf Wizard</button>
+            <button type="button" id="generateBarbarian" class="btn-primary px-5 py-3 rounded-xl text-sm font-semibold border border-amber-900/30">Half-Orc Barbarian</button>
+          </div>
+        </div>
         <div class="grid gap-4 md:grid-cols-3">
             <div>
                 <label class="text-sm text-amber-900">Rasa</label>
@@ -79,9 +89,81 @@ const saveBtn = document.getElementById('saveBtn');
 const profList = document.getElementById('proficienciesList');
 const itemsList = document.getElementById('itemsList');
 const formAlert = document.getElementById('formAlert');
+const generateFighterBtn = document.getElementById("generateFighter");
+const generateRogueBtn = document.getElementById("generateRogue");
+const generateClericBtn = document.getElementById("generateCleric");
+const generateWizardBtn = document.getElementById("generateWizard");
+const generateBarbarianBtn = document.getElementById("generateBarbarian");
+
 let equipmentChoices = [];
 let tempErrorTimeout = null;
 let tempErrorActive = false;
+
+const actions = {
+  fighter: '@Url.Action("SampleHumanFighter","Character")',
+  rogue: '@Url.Action("SampleHalfElfRogue","Character")',
+  cleric: '@Url.Action("SampleDwarfCleric","Character")',
+  wizard: '@Url.Action("SampleElfWizard","Character")',
+  barbarian: '@Url.Action("SampleHalfOrcBarbarian","Character")',
+};
+
+async function sampleSheet(action) {
+  const name = document.querySelector('input[name="Name"]').value.trim();
+  if (name == '') {
+    showError("Uzupelnij imie postaci.");
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+    return;
+  }
+  try {
+    const res = await fetch(action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(name)
+    });
+    if (!res.ok) {
+      let message = 'Blad zapisu postaci.';
+      try {
+        const err = await res.json();
+        if (err && err.error) {
+          message = err.error;
+        }
+      } catch {}
+      showError(message);
+      window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+      return;
+    }
+    const data = await res.json();
+    window.location = data.redirectUrl;
+  } catch (e) {
+    showError('Blad polaczenia podczas zapisu.');
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+  }
+}
+
+generateFighterBtn.addEventListener('click', async (event) => {
+  await sampleSheet(actions.fighter);
+})
+generateRogueBtn.addEventListener('click', async (event) => {
+  await sampleSheet(actions.rogue);
+})
+generateClericBtn.addEventListener('click', async (event) => {
+  await sampleSheet(actions.cleric);
+})
+generateWizardBtn.addEventListener('click', async (event) => {
+  await sampleSheet(actions.wizard);
+})
+generateBarbarianBtn.addEventListener('click', async (event) => {
+  await sampleSheet(actions.barbarian);
+})
 
 const escapeHtml = (str = '') => str
   .replace(/&/g, '&amp;')

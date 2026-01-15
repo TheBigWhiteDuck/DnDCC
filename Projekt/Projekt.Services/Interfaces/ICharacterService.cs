@@ -9,7 +9,7 @@ public interface ICharacterService
 {
     public Character GetCharacter(int id);
     public IEnumerable<Character> GetCharacters(int? userId = null);
-    public void SaveCharacter(Character character);
+    public int SaveCharacter(Character character);
     public void DeleteCharacter(int id);
     public void UpdateCharacter(Character character);
     public void AddItem(Item item);
