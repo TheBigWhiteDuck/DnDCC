@@ -82,12 +82,12 @@
     </div>
 
     <div class="grid gap-3 md:grid-cols-3 text-sm">
-        <div class="bg-amber-50 border border-amber-900/15 rounded-lg p-3">STR: @Model.Strength</div>
-        <div class="bg-amber-50 border border-amber-900/15 rounded-lg p-3">DEX: @Model.Dexterity</div>
-        <div class="bg-amber-50 border border-amber-900/15 rounded-lg p-3">CON: @Model.Constitution</div>
-        <div class="bg-amber-50 border border-amber-900/15 rounded-lg p-3">INT: @Model.Intelligence</div>
-        <div class="bg-amber-50 border border-amber-900/15 rounded-lg p-3">WIS: @Model.Wisdom</div>
-        <div class="bg-amber-50 border border-amber-900/15 rounded-lg p-3">CHA: @Model.Charisma</div>
+        <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">STR: @Model.Strength</div>
+        <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">DEX: @Model.Dexterity</div>
+        <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">CON: @Model.Constitution</div>
+        <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">INT: @Model.Intelligence</div>
+        <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">WIS: @Model.Wisdom</div>
+        <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">CHA: @Model.Charisma</div>
     </div>
 
     <div class="grid gap-4 md:grid-cols-2">
@@ -100,7 +100,7 @@
         <div>
             <h3 class="title-font text-lg text-amber-900 mb-2">Cechy rasowe</h3>
             <div class="flex flex-wrap gap-2 text-sm">
-                @foreach (var t in traits) { <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full border border-emerald-900/10">@t</span> }
+                @foreach (var t in traits) { <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full border border-amber-900/20">@t</span> }
             </div>
         </div>
     </div>

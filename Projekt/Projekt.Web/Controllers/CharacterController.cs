@@ -217,7 +217,7 @@ namespace Projekt.Web.Controllers
             if (!isPremium)
             {
                 var existingCount = characterService.GetCharacters(currentUserId).Count();
-                if (existingCount >= 2)
+                if (existingCount >= 6)
                 {
                     return BadRequest(
                         new
