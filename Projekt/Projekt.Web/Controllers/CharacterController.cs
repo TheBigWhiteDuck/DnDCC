@@ -19,6 +19,9 @@ using Projekt.Services.ConcreteServices;
 
 namespace Projekt.Web.Controllers
 {
+    /// <summary>
+    /// Kontroler do zarządzania postaciami graczy, wyposażeniem, notatkami oraz generowaniem próbek postaci.
+    /// </summary>
     [Authorize]
     public class CharacterController : BaseController
     {
@@ -26,6 +29,9 @@ namespace Projekt.Web.Controllers
         protected readonly ICharacterService characterService;
         private readonly IWebHostEnvironment _env;
 
+        /// <summary>
+        /// Tworzy instancję CharacterController i inicjalizuje zależności: HttpClient, CharacterService, logger, mapper, lokalizator i środowisko web.
+        /// </summary>
         public CharacterController(
             IHttpClientFactory httpClientFactory,
             ICharacterService _characterService,
@@ -41,6 +47,9 @@ namespace Projekt.Web.Controllers
             _env = env;
         }
 
+        /// <summary>
+        /// Wyświetla listę postaci zalogowanego użytkownika.
+        /// </summary>
         public IActionResult Index()
         {
             var userIdClaim = User
@@ -55,11 +64,17 @@ namespace Projekt.Web.Controllers
             return View(characters);
         }
 
+        /// <summary>
+        /// Usuwa spacje z przekazanego ciągu znaków.
+        /// </summary>
         public string ClearSpaces(string sentence)
         {
             return sentence.Contains(" ") ? sentence.Replace(" ", "") : sentence;
         }
 
+        /// <summary>
+        /// Wyświetla szczegóły postaci, w tym cechy i umiejętności.
+        /// </summary>
         public async Task<IActionResult> Details(int id)
         {
             var character = characterService.GetCharacter(id);
@@ -72,6 +87,9 @@ namespace Projekt.Web.Controllers
             return View(character);
         }
 
+        /// <summary>
+        /// Pobiera nazwy obiektów z API DnD5e na podstawie listy indeksów.
+        /// </summary>
         public async Task<IList<string>> GetNamesByIndex(IList<string> indexes, string url)
         {
             IList<string> data = new List<string>();
@@ -83,6 +101,9 @@ namespace Projekt.Web.Controllers
             return data;
         }
 
+        /// <summary>
+        /// Zapisuje notatki dla konkretnej postaci.
+        /// </summary>
         [HttpPost]
         public async Task<bool> SaveNotes(int charId, string? notes)
         {
@@ -100,6 +121,9 @@ namespace Projekt.Web.Controllers
             return false;
         }
 
+        /// <summary>
+        /// Wyświetla ekran zarządzania ekwipunkiem postaci.
+        /// </summary>
         public async Task<IActionResult> Equipment(int characterId)
         {
             var character = characterService.GetCharacter(characterId);
@@ -123,6 +147,9 @@ namespace Projekt.Web.Controllers
             return View("Equipment", character.Items);
         }
 
+        /// <summary>
+        /// Dodaje przedmiot do ekwipunku postaci.
+        /// </summary>
         [HttpPost]
         public IActionResult AddEquipment(Item item)
         {
@@ -131,12 +158,18 @@ namespace Projekt.Web.Controllers
             return RedirectToAction("Details", character);
         }
 
+        /// <summary>
+        /// Usuwa przedmiot z ekwipunku postaci.
+        /// </summary>
         public IActionResult RemoveEquipment(int itemId)
         {
             characterService.RemoveItem(itemId);
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Pobiera nazwę elementu z API DnD5e na podstawie indeksu.
+        /// </summary>
         public async Task<string> GetNameByIndex(string url)
         {
             var response = await _httpClient.GetStringAsync(
@@ -146,6 +179,9 @@ namespace Projekt.Web.Controllers
             return doc.RootElement.GetProperty("name").GetString();
         }
 
+        /// <summary>
+        /// Wyświetla formularz dodawania nowej postaci, wczytując rasy, klasy i alignments z API.
+        /// </summary>
         public async Task<IActionResult> Add()
         {
             var raceResponse = await _httpClient.GetStringAsync(
@@ -200,6 +236,9 @@ namespace Projekt.Web.Controllers
             return View("Add");
         }
 
+        /// <summary>
+        /// Dodaje nową postać dla użytkownika, uwzględniając ograniczenia konta standardowego/premium oraz początkowe wyposażenie.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CharacterRequest request)
         {
@@ -334,6 +373,9 @@ namespace Projekt.Web.Controllers
             return Ok(new { success = true, redirectUrl = Url.Action("Index") });
         }
 
+        /// <summary>
+        /// Usuwa postać i powiązane pliki awatarów.
+        /// </summary>
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -342,6 +384,9 @@ namespace Projekt.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Usuwa pliki awatara postaci z katalogu wwwroot/images/avatars.
+        /// </summary>
         private void DeleteAvatarFiles(int characterId)
         {
             var webRoot = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
@@ -368,6 +413,9 @@ namespace Projekt.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera listę umiejętności dla danej klasy w formacie ChoiceModel z API DnD5e.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetProficiencies2(string className)
         {
@@ -435,6 +483,9 @@ namespace Projekt.Web.Controllers
             return Json(choices);
         }
 
+        /// <summary>
+        /// Pobiera listę umiejętności dla klasy w formie SelectListItem.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetProficiencies(string className)
         {
@@ -455,6 +506,9 @@ namespace Projekt.Web.Controllers
             return Json(profOptions);
         }
 
+        /// <summary>
+        /// Pobiera listę czarów dla danej klasy.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetSpells(string className)
         {
@@ -475,6 +529,9 @@ namespace Projekt.Web.Controllers
             return Json(spells);
         }
 
+        /// <summary>
+        /// Pobiera przedmioty z określonej kategorii z API DnD5e.
+        /// </summary>
         public async Task<List<ItemModel>> GetItemsByCategory(string category, int choose = 1)
         {
             var categoryResponse = await _httpClient.GetStringAsync(
@@ -494,6 +551,9 @@ namespace Projekt.Web.Controllers
             return items;
         }
 
+        /// <summary>
+        /// Pobiera opcje początkowego wyposażenia dla klasy i generuje struktury wyboru przedmiotów.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetItems(string className)
         {
@@ -640,6 +700,9 @@ namespace Projekt.Web.Controllers
             return Json(choices);
         }
 
+        /// <summary>
+        /// Tworzy przykładowego człowieka wojownika z początkowym wyposażeniem.
+        /// </summary>
         public async Task<IActionResult> SampleHumanFighter([FromBody] string name)
         {
             var userIdClaim = User
@@ -716,6 +779,9 @@ namespace Projekt.Web.Controllers
             return Ok(new { success = true, redirectUrl = Url.Action("Index") });
         }
 
+        /// <summary>
+        /// Tworzy przykładowego półelfa złodzieja z początkowym wyposażeniem i cechami.
+        /// </summary>
         public async Task<IActionResult> SampleHalfElfRogue([FromBody] string name)
         {
             var userIdClaim = User
@@ -761,7 +827,7 @@ namespace Projekt.Web.Controllers
             {
                 "darkvision",
                 "fey-ancestry",
-                "skill-versatility"
+                "skill-versatility",
             };
             Character character = new Character
             {
@@ -782,7 +848,7 @@ namespace Projekt.Web.Controllers
                 Speed = 30,
                 UserId = currentUserId,
                 Proficiencies = proficiencies,
-                Traits = traits
+                Traits = traits,
             };
             int charId = characterService.SaveCharacter(character);
             List<Item> items = new List<Item>
@@ -802,6 +868,9 @@ namespace Projekt.Web.Controllers
             return Ok(new { success = true, redirectUrl = Url.Action("Index") });
         }
 
+        /// <summary>
+        /// Tworzy przykładowego krasnoluda kapłana z początkowym wyposażeniem i cechami.
+        /// </summary>
         public async Task<IActionResult> SampleDwarfCleric([FromBody] string name)
         {
             var userIdClaim = User
@@ -845,7 +914,7 @@ namespace Projekt.Web.Controllers
                 "dwarven-resilience",
                 "stonecunning",
                 "dwarven-combat-training",
-                "tool-proficiency"
+                "tool-proficiency",
             };
             Character character = new Character
             {
@@ -866,7 +935,7 @@ namespace Projekt.Web.Controllers
                 Speed = 25,
                 UserId = currentUserId,
                 Proficiencies = proficiencies,
-                Traits = traits
+                Traits = traits,
             };
             int charId = characterService.SaveCharacter(character);
             List<Item> items = new List<Item>
@@ -884,6 +953,9 @@ namespace Projekt.Web.Controllers
             return Ok(new { success = true, redirectUrl = Url.Action("Index") });
         }
 
+        /// <summary>
+        /// Tworzy przykładowego elfa czarodzieja z początkowym wyposażeniem i cechami.
+        /// </summary>
         public async Task<IActionResult> SampleElfWizard([FromBody] string name)
         {
             var userIdClaim = User
@@ -945,7 +1017,7 @@ namespace Projekt.Web.Controllers
                 Speed = 30,
                 UserId = currentUserId,
                 Proficiencies = proficiencies,
-                Traits = traits
+                Traits = traits,
             };
             int charId = characterService.SaveCharacter(character);
             List<Item> items = new List<Item>
@@ -963,6 +1035,9 @@ namespace Projekt.Web.Controllers
             return Ok(new { success = true, redirectUrl = Url.Action("Index") });
         }
 
+        /// <summary>
+        /// Tworzy przykładowego półorka barbarzyńcę z początkowym wyposażeniem i cechami.
+        /// </summary>
         public async Task<IActionResult> SampleHalfOrcBarbarian([FromBody] string name)
         {
             var userIdClaim = User
@@ -1026,7 +1101,7 @@ namespace Projekt.Web.Controllers
                 Speed = 30,
                 UserId = currentUserId,
                 Proficiencies = proficiencies,
-                Traits = traits
+                Traits = traits,
             };
             int charId = characterService.SaveCharacter(character);
             List<Item> items = new List<Item>

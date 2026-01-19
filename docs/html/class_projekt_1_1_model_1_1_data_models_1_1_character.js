@@ -1,0 +1,25 @@
+var class_projekt_1_1_model_1_1_data_models_1_1_character =
+[
+    [ "Alignment", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#ac2039a74e9194ce3646279b6ba95b7dc", null ],
+    [ "ArmorClass", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a73f92b79d7525d7dc257dde84a1dec32", null ],
+    [ "Charisma", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a116918d2a7373bba3b9e619e31e6e267", null ],
+    [ "Class", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a8353ddb25df407eafb0633ce9b22677f", null ],
+    [ "Constitution", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a8f3b89cc242b26761de4a0020b79ab32", null ],
+    [ "CurrentHP", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a66d4517f6efa9234689d211ddbca824b", null ],
+    [ "Dexterity", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a36c0adc79da59d85b8ec6243373a240c", null ],
+    [ "Id", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#ab90cd34ae07a1fecde2de6d3a093be99", null ],
+    [ "Intelligence", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a56b80e6dc06ee31503d7527a99720da3", null ],
+    [ "Items", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#ad9d7101e2243ea8f20dcf2da6c3de66a", null ],
+    [ "MaxHP", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a686242b7c383cba93107fe73b2b5b1f0", null ],
+    [ "Name", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a1e0cab6af7d6a3d9b543e18bbd48ac79", null ],
+    [ "Notes", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a21a76f0bc4669c499f10cd3fee542a21", null ],
+    [ "Proficiencies", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#af606db47657eb133683068a7f7f56a94", null ],
+    [ "Race", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a9790544d480a67e5e56b7498cc2a272f", null ],
+    [ "Speed", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#adc2f8581f4fe5b8dd9af3dfd70229723", null ],
+    [ "Strength", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#ab9943558a6fcdd64273eac618a83d829", null ],
+    [ "TemporaryHP", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#af02a0751fe7b28879fa2747c68b05aa2", null ],
+    [ "Traits", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#aa7baef50dc9280a802c80a1dea29ed64", null ],
+    [ "User", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a3462c2d3db1a2571920f34e6bbacbf61", null ],
+    [ "UserId", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a2aa24f60af56986af3c3a4d2aab97056", null ],
+    [ "Wisdom", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a7936f860bdd853170d84ec6ee990691c", null ]
+];

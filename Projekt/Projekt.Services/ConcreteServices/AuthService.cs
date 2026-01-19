@@ -4,14 +4,17 @@ using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Projekt.Model.DataModels;
 using Projekt.Services.Interfaces;
 using Projekt.ViewModel.VM;
-using Microsoft.Extensions.Logging;
 
 namespace Projekt.Services.ConcreteServices;
 
+/// <summary>
+/// Serwis odpowiedzialny za autoryzację użytkowników: rejestrację, logowanie, reset hasła, generowanie tokenów JWT oraz upgrade do premium.
+/// </summary>
 public class AuthService : IAuthService
 {
     private readonly UserManager<User> _userManager;
@@ -19,7 +22,15 @@ public class AuthService : IAuthService
     private readonly IConfiguration _config;
     private readonly ILogger<AuthService> _logger;
 
-    public AuthService(UserManager<User> userManager, RoleManager<Role> roleManager, IConfiguration config, ILogger<AuthService> logger)
+    /// <summary>
+    /// Tworzy instancję serwisu autoryzacji.
+    /// </summary>
+    public AuthService(
+        UserManager<User> userManager,
+        RoleManager<Role> roleManager,
+        IConfiguration config,
+        ILogger<AuthService> logger
+    )
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -27,11 +38,19 @@ public class AuthService : IAuthService
         _logger = logger;
     }
 
-    public async Task<(bool Success, string? Error, AuthResultVm? Result)> RegisterAsync(RegisterUserVm input, string role = "User")
+    /// <summary>
+    /// Rejestruje nowego użytkownika i przypisuje mu rolę.
+    /// </summary>
+    public async Task<(bool Success, string? Error, AuthResultVm? Result)> RegisterAsync(
+        RegisterUserVm input,
+        string role = "User"
+    )
     {
-        var existing = await _userManager.FindByNameAsync(input.UserName) 
-                       ?? await _userManager.FindByEmailAsync(input.Email);
-        if (existing != null) return (false, "User already exists", null);
+        var existing =
+            await _userManager.FindByNameAsync(input.UserName)
+            ?? await _userManager.FindByEmailAsync(input.Email);
+        if (existing != null)
+            return (false, "User already exists", null);
 
         var user = new User
         {
@@ -40,10 +59,11 @@ public class AuthService : IAuthService
             EmailConfirmed = true,
             FirstName = input.FirstName,
             LastName = input.LastName,
-            IsPremium = input.IsPremium
+            IsPremium = input.IsPremium,
         };
         var create = await _userManager.CreateAsync(user, input.Password);
-        if (!create.Succeeded) return (false, string.Join("; ", create.Errors.Select(e => e.Description)), null);
+        if (!create.Succeeded)
+            return (false, string.Join("; ", create.Errors.Select(e => e.Description)), null);
 
         if (!await _roleManager.RoleExistsAsync(role))
             await _roleManager.CreateAsync(new Role { Name = role });
@@ -54,19 +74,30 @@ public class AuthService : IAuthService
         return (true, null, result);
     }
 
-    public async Task<(bool Success, string? Error, AuthResultVm? Result)> LoginAsync(LoginUserVm input)
+    /// <summary>
+    /// Loguje użytkownika na podstawie nazwy użytkownika lub e-maila i hasła.
+    /// </summary>
+    public async Task<(bool Success, string? Error, AuthResultVm? Result)> LoginAsync(
+        LoginUserVm input
+    )
     {
-        var user = await _userManager.FindByNameAsync(input.UserNameOrEmail)
-                   ?? await _userManager.FindByEmailAsync(input.UserNameOrEmail);
-        if (user == null) return (false, "Invalid credentials", null);
+        var user =
+            await _userManager.FindByNameAsync(input.UserNameOrEmail)
+            ?? await _userManager.FindByEmailAsync(input.UserNameOrEmail);
+        if (user == null)
+            return (false, "Invalid credentials", null);
 
         var valid = await _userManager.CheckPasswordAsync(user, input.Password);
-        if (!valid) return (false, "Invalid credentials", null);
+        if (!valid)
+            return (false, "Invalid credentials", null);
 
         var result = await GenerateTokenAsync(user);
         return (true, null, result);
     }
 
+    /// <summary>
+    /// Generuje token JWT dla użytkownika wraz z rolami i dodatkowymi danymi.
+    /// </summary>
     private async Task<AuthResultVm> GenerateTokenAsync(User user)
     {
         var roles = await _userManager.GetRolesAsync(user);
@@ -96,7 +127,8 @@ public class AuthService : IAuthService
             audience: jwtSection["Audience"],
             claims: claims,
             expires: expires,
-            signingCredentials: creds);
+            signingCredentials: creds
+        );
 
         return new AuthResultVm
         {
@@ -106,11 +138,16 @@ public class AuthService : IAuthService
             Roles = roles,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            IsPremium = user.IsPremium
+            IsPremium = user.IsPremium,
         };
     }
 
-    public async Task<(bool success, string? error)> SendPasswordResetTokenAsync(ForgotPasswordVm vm)
+    /// <summary>
+    /// Generuje token resetowania hasła i loguje go (symulacja wysyłki e-mail).
+    /// </summary>
+    public async Task<(bool success, string? error)> SendPasswordResetTokenAsync(
+        ForgotPasswordVm vm
+    )
     {
         var user = await _userManager.FindByEmailAsync(vm.Email);
         if (user is null)
@@ -126,31 +163,44 @@ public class AuthService : IAuthService
         Console.WriteLine("[Password Reset]");
         Console.WriteLine($"User: {user.UserName}");
         Console.WriteLine($"Token: {token}");
-        
+
         _logger.LogInformation("Password reset token generated for {user}", user.UserName);
         return (true, null);
     }
 
+    /// <summary>
+    /// Resetuje hasło użytkownika na podstawie tokena resetującego.
+    /// </summary>
     public async Task<(bool success, string? error)> ResetPasswordAsync(ResetPasswordVm vm)
     {
         var user = vm.UserNameOrEmail.Contains('@')
             ? await _userManager.FindByEmailAsync(vm.UserNameOrEmail)
             : await _userManager.FindByNameAsync(vm.UserNameOrEmail);
 
-        if (user is null) return (true, null);
+        if (user is null)
+            return (true, null);
 
         var result = await _userManager.ResetPasswordAsync(user, vm.Token, vm.NewPassword);
         if (!result.Succeeded)
         {
             var error = string.Join("; ", result.Errors.Select(e => e.Description));
-            _logger.LogWarning("Password reset failed for {user}: {error}", vm.UserNameOrEmail, error);
+            _logger.LogWarning(
+                "Password reset failed for {user}: {error}",
+                vm.UserNameOrEmail,
+                error
+            );
             return (false, error);
         }
         _logger.LogInformation("Password reset succeeded for {user}", vm.UserNameOrEmail);
         return (true, null);
     }
 
-    public async Task<(bool Success, string? Error, AuthResultVm? Result)> UpgradeToPremiumAsync(int userId)
+    /// <summary>
+    /// Uaktualnia konto użytkownika do statusu premium i generuje nowy token.
+    /// </summary>
+    public async Task<(bool Success, string? Error, AuthResultVm? Result)> UpgradeToPremiumAsync(
+        int userId
+    )
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user is null)
@@ -175,6 +225,9 @@ public class AuthService : IAuthService
         return (true, null, result);
     }
 
+    /// <summary>
+    /// Wyszukuje użytkownika po nazwie lub e-mailu.
+    /// </summary>
     private async Task<User?> FindByUserNameOrEmailAsync(string userNameOrEmail)
     {
         User? user = null;
@@ -184,5 +237,4 @@ public class AuthService : IAuthService
             user = await _userManager.FindByNameAsync(userNameOrEmail);
         return user;
     }
-
 }

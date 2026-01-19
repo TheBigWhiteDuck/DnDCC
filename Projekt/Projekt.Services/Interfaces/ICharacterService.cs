@@ -1,10 +1,13 @@
 using AutoMapper;
-using Projekt.DAL;
 using Microsoft.Extensions.Logging;
+using Projekt.DAL;
 using Projekt.Model.DataModels;
 
 namespace Projekt.Services.ConcreteServices;
 
+/// <summary>
+/// Interfejs serwisu do zarządzania postaciami i ich ekwipunkiem.
+/// </summary>
 public interface ICharacterService
 {
     public Character GetCharacter(int id);

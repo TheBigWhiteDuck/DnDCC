@@ -1,0 +1,14 @@
+PROJECT_NAME           = "DnD Character Creator"
+OUTPUT_DIRECTORY       = docs
+INPUT                  = ./Projekt
+RECURSIVE              = YES
+FILE_PATTERNS          = *.cs
+
+OPTIMIZE_OUTPUT_CSHARP = YES
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_INTERNAL       = NO
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO

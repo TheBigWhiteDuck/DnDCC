@@ -1,5 +1,8 @@
 namespace Projekt.ViewModel.VM;
 
+/// <summary>
+/// Model reprezentujący wynik uwierzytelnienia użytkownika, w tym token, datę wygaśnięcia i role.
+/// </summary>
 public class AuthResultVm
 {
     public string Token { get; set; } = default!;

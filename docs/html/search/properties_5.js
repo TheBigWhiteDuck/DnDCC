@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['id_0',['Id',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#ab90cd34ae07a1fecde2de6d3a093be99',1,'Projekt.Model.DataModels.Character.Id'],['../class_projekt_1_1_model_1_1_data_models_1_1_item.html#ac3162c7f2c83d0a65d697e7d530509a7',1,'Projekt.Model.DataModels.Item.Id']]],
+  ['index_1',['Index',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_item.html#a6b9d69fa52a85ef4c954483480b8492f',1,'Projekt.Model.ApiResponses.SpellItem.Index'],['../class_projekt_1_1_model_1_1_api_responses_1_1_api_item.html#a6b67fce1f4b6f5188a84274ced19afe5',1,'Projekt.Model.ApiResponses.ApiItem.Index']]],
+  ['intelligence_2',['Intelligence',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a56b80e6dc06ee31503d7527a99720da3',1,'Projekt::Model::DataModels::Character']]],
+  ['ispremium_3',['IsPremium',['../class_projekt_1_1_model_1_1_data_models_1_1_user.html#aa4e4197d31ea51531d831e84727b8a94',1,'Projekt.Model.DataModels.User.IsPremium'],['../class_projekt_1_1_view_model_1_1_v_m_1_1_auth_result_vm.html#a60667ad0514999ececcc93c6bc1af485',1,'Projekt.ViewModel.VM.AuthResultVm.IsPremium'],['../class_projekt_1_1_view_model_1_1_v_m_1_1_register_user_vm.html#a9801e29a333026b869df2caee2018cf8',1,'Projekt.ViewModel.VM.RegisterUserVm.IsPremium']]],
+  ['issuer_4',['Issuer',['../class_projekt_1_1_view_model_1_1_v_m_1_1_jwt_options_vm.html#ac8898e9caaeb39a875c220386af2366f',1,'Projekt::ViewModel::VM::JwtOptionsVm']]],
+  ['item_5',['Item',['../class_projekt_1_1_d_a_l_1_1_application_db_context.html#aaf947d084f9cf641b20cfd496ae61f66',1,'Projekt.DAL.ApplicationDbContext.Item'],['../class_projekt_1_1_model_1_1_api_responses_1_1_option.html#aa094de5db7b1b1225bd1c9f175cd96e7',1,'Projekt.Model.ApiResponses.Option.Item']]],
+  ['items_6',['Items',['../class_projekt_1_1_model_1_1_api_responses_1_1_character_request.html#acd278c75980eccc745c62171ed3956e8',1,'Projekt.Model.ApiResponses.CharacterRequest.Items'],['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#ad9d7101e2243ea8f20dcf2da6c3de66a',1,'Projekt.Model.DataModels.Character.Items']]],
+  ['itemsets_7',['ItemSets',['../class_projekt_1_1_model_1_1_api_responses_1_1_item_choice_model.html#a44be6b1d95aa6358daf12c0a5ebde0cd',1,'Projekt::Model::ApiResponses::ItemChoiceModel']]]
+];

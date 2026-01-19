@@ -1,0 +1,27 @@
+var class_projekt_1_1_web_1_1_controllers_1_1_character_controller =
+[
+    [ "CharacterController", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#aa6c969a8ae9e7f02bf5c24316473cbd0", null ],
+    [ "Add", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#ab9c6504a7d5edb6599aeb44edab41b89", null ],
+    [ "Add", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#aacae45e776bb3b0cd8e59da34126aacb", null ],
+    [ "AddEquipment", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a66f2c1dfcd6d01a905cb287e98b056b6", null ],
+    [ "ClearSpaces", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a55d76fed8af01a8b1332195db6651cfb", null ],
+    [ "Delete", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a91057808fce364caa46b0e18ae1174d3", null ],
+    [ "Details", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a8132e3982f01a4b2aebe78cd4f005f1f", null ],
+    [ "Equipment", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a97faca97a8dbc4d6a02f27347fa88455", null ],
+    [ "GetItems", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a28d7d45c67709e702a91ed7b52856c0a", null ],
+    [ "GetItemsByCategory", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a30dd8c8b1f142b1e6220fce170e5433a", null ],
+    [ "GetNameByIndex", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#af78b8f3b18ab05c832191e16b65f6ff0", null ],
+    [ "GetNamesByIndex", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#acc4d754bcabf11e78819989db9967d15", null ],
+    [ "GetProficiencies", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#ad0a9402d822a114a7104a03c30e7ebf9", null ],
+    [ "GetProficiencies2", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#aa3d106b5e42fbe8b1252df9623f4f686", null ],
+    [ "GetSpells", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a5c2b5bcad2543b2a1abd7ecde59061be", null ],
+    [ "Index", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#aec41b4cfa4fb49910e74d5e29299a762", null ],
+    [ "RemoveEquipment", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#ac85bdad82dce6abbea2c412916fda672", null ],
+    [ "SampleDwarfCleric", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a508fe2f55fd48413736a940a774d1e97", null ],
+    [ "SampleElfWizard", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a7a5f85699373df2e8b1300387ba63c8f", null ],
+    [ "SampleHalfElfRogue", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a2ec7017d5c9345cc68516f7af71455ff", null ],
+    [ "SampleHalfOrcBarbarian", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a7aa622b93fbd9d414b64ce77ba043d36", null ],
+    [ "SampleHumanFighter", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#ad605338e7ecfe9873aaebf769b57c1ea", null ],
+    [ "SaveNotes", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#afd8fca7795cfd2962f3a12c5d2fcefb4", null ],
+    [ "characterService", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a2bb44fc4edba75e53daf6c25cfc86d69", null ]
+];

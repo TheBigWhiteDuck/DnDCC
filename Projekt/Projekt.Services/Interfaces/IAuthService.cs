@@ -2,6 +2,9 @@ using Projekt.ViewModel.VM;
 
 namespace Projekt.Services.Interfaces;
 
+/// <summary>
+/// Interfejs serwisu uwierzytelniania i zarządzania kontem użytkownika.
+/// </summary>
 public interface IAuthService
 {
     Task<(bool Success, string? Error, AuthResultVm? Result)> RegisterAsync(RegisterUserVm input, string role = "User");

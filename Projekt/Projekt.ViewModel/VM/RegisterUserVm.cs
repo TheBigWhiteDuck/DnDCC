@@ -1,5 +1,8 @@
 namespace Projekt.ViewModel.VM;
 
+/// <summary>
+/// Model danych rejestracji użytkownika, zawiera login, email, hasło, imię, nazwisko i status Premium.
+/// </summary>
 public class RegisterUserVm
 {
     public string UserName { get; set; } = default!;

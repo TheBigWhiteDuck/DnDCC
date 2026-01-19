@@ -1,4 +1,8 @@
 ﻿namespace Projekt.ViewModel.VM;
+
+/// <summary>
+/// Model konfiguracji JWT, zawiera dane takie jak Issuer, Audience, SecretKey i czas wygaśnięcia tokenu.
+/// </summary>
 public class JwtOptionsVm
 {
     public string? Issuer { get; set; }

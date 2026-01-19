@@ -1,36 +1,108 @@
 namespace Projekt.Model.DataModels;
 
+/// <summary>
+/// Reprezentuje postać gracza w systemie DnD.
+/// Zawiera podstawowe informacje fabularne, statystyki oraz powiązane zasoby.
+/// </summary>
 public class Character
 {
-    public int Id {get;set;}
-    public string Name {get;set;}
-    public string Alignment {get;set;}
+    /// <summary>
+    /// Unikalny identyfikator postaci.
+    /// </summary>
+    public int Id { get; set; }
 
+    /// <summary>
+    /// Imię postaci.
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Charakter (alignment) postaci, np. Lawful Good, Chaotic Neutral.
+    /// </summary>
+    public string Alignment { get; set; }
+
+    /// <summary>Siła (STR).</summary>
     public int Strength { get; set; }
+
+    /// <summary>Zręczność (DEX).</summary>
     public int Dexterity { get; set; }
+
+    /// <summary>Kondycja (CON).</summary>
     public int Constitution { get; set; }
+
+    /// <summary>Inteligencja (INT).</summary>
     public int Intelligence { get; set; }
+
+    /// <summary>Mądrość (WIS).</summary>
     public int Wisdom { get; set; }
+
+    /// <summary>Charyzma (CHA).</summary>
     public int Charisma { get; set; }
 
-    public string Race {get;set;}
-    public string Class {get;set;}
-    //public string SubClass { get; set; } = string.Empty;
-    //public string Spells { get; set; } = string.Empty;
+    /// <summary>
+    /// Rasa postaci (np. Human, Elf, Dragonborn).
+    /// </summary>
+    public string Race { get; set; }
 
-    public IList<string> Proficiencies { get; set; } = new List<string>(); // OPCJE
-    public IList<string> Traits { get; set; } = new List<string>(); // UZUPEŁNIONE AUTOMATYCZNIE
+    /// <summary>
+    /// Klasa postaci (np. Fighter, Wizard).
+    /// </summary>
+    public string Class { get; set; }
 
-    public int MaxHP { get; set; } // UZUPEŁNIONE AUTOMATYCZNIE
-    public int CurrentHP { get; set; } // UZUPEŁNIONE AUTOMATYCZNIE
-    public int TemporaryHP { get; set; } // UZUPEŁNIONE AUTOMATYCZNIE
-    public int ArmorClass { get; set; } // UZUPEŁNIONE AUTOMATYCZNIE
-    public int Speed { get; set; } // UZUPEŁNIONE AUTOMATYCZNIE
+    /// <summary>
+    /// Lista biegłości wybranych przez użytkownika.
+    /// </summary>
+    public IList<string> Proficiencies { get; set; } = new List<string>();
 
+    /// <summary>
+    /// Cechy rasowe i klasowe przypisywane automatycznie.
+    /// </summary>
+    public IList<string> Traits { get; set; } = new List<string>();
+
+    /// <summary>
+    /// Maksymalna liczba punktów życia postaci.
+    /// Wartość obliczana automatycznie.
+    /// </summary>
+    public int MaxHP { get; set; }
+
+    /// <summary>
+    /// Aktualna liczba punktów życia postaci.
+    /// </summary>
+    public int CurrentHP { get; set; }
+
+    /// <summary>
+    /// Tymczasowe punkty życia.
+    /// </summary>
+    public int TemporaryHP { get; set; }
+
+    /// <summary>
+    /// Klasa pancerza (Armor Class).
+    /// Wartość obliczana automatycznie.
+    /// </summary>
+    public int ArmorClass { get; set; }
+
+    /// <summary>
+    /// Prędkość poruszania się postaci.
+    /// </summary>
+    public int Speed { get; set; }
+
+    /// <summary>
+    /// Dodatkowe notatki fabularne lub mechaniczne.
+    /// </summary>
     public string? Notes { get; set; }
 
-    public virtual IList<Item> Items { get; set; } = new List<Item>(); // OPCJE
+    /// <summary>
+    /// Lista przedmiotów posiadanych przez postać.
+    /// </summary>
+    public virtual IList<Item> Items { get; set; } = new List<Item>();
 
-    public int? UserId {get;set;}
-    public virtual User? User {get;set;}
+    /// <summary>
+    /// Id użytkownika będącego właścicielem postaci.
+    /// </summary>
+    public int? UserId { get; set; }
+
+    /// <summary>
+    /// Użytkownik, do którego należy postać.
+    /// </summary>
+    public virtual User? User { get; set; }
 }

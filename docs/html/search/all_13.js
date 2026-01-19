@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['sampledwarfcleric_0',['SampleDwarfCleric',['../class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a508fe2f55fd48413736a940a774d1e97',1,'Projekt::Web::Controllers::CharacterController']]],
+  ['sampleelfwizard_1',['SampleElfWizard',['../class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a7a5f85699373df2e8b1300387ba63c8f',1,'Projekt::Web::Controllers::CharacterController']]],
+  ['samplehalfelfrogue_2',['SampleHalfElfRogue',['../class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a2ec7017d5c9345cc68516f7af71455ff',1,'Projekt::Web::Controllers::CharacterController']]],
+  ['samplehalforcbarbarian_3',['SampleHalfOrcBarbarian',['../class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a7aa622b93fbd9d414b64ce77ba043d36',1,'Projekt::Web::Controllers::CharacterController']]],
+  ['samplehumanfighter_4',['SampleHumanFighter',['../class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#ad605338e7ecfe9873aaebf769b57c1ea',1,'Projekt::Web::Controllers::CharacterController']]],
+  ['savecharacter_5',['SaveCharacter',['../class_projekt_1_1_services_1_1_concrete_services_1_1_character_service.html#a2abb695c95836615e9cb17d61c99ab64',1,'Projekt.Services.ConcreteServices.CharacterService.SaveCharacter()'],['../interface_projekt_1_1_services_1_1_concrete_services_1_1_i_character_service.html#a9d37cd28dac1160399884cab0e8fac05',1,'Projekt.Services.ConcreteServices.ICharacterService.SaveCharacter()']]],
+  ['savenotes_6',['SaveNotes',['../class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#afd8fca7795cfd2962f3a12c5d2fcefb4',1,'Projekt::Web::Controllers::CharacterController']]],
+  ['savetoken_7',['SaveToken',['../_program_8cs.html#afa41b57e9609341c90f453fdc5845751',1,'Program.cs']]],
+  ['secretkey_8',['SecretKey',['../class_projekt_1_1_view_model_1_1_v_m_1_1_jwt_options_vm.html#aac5baf962b83de277f36c601acc274e9',1,'Projekt::ViewModel::VM::JwtOptionsVm']]],
+  ['sendpasswordresettokenasync_9',['SendPasswordResetTokenAsync',['../class_projekt_1_1_services_1_1_concrete_services_1_1_auth_service.html#acdac441b570194fdd47fa7673c19557b',1,'Projekt.Services.ConcreteServices.AuthService.SendPasswordResetTokenAsync()'],['../interface_projekt_1_1_services_1_1_interfaces_1_1_i_auth_service.html#a04b52c5b2f14ae77ba512b560f6a80bb',1,'Projekt.Services.Interfaces.IAuthService.SendPasswordResetTokenAsync()']]],
+  ['showrequestid_10',['ShowRequestId',['../class_projekt_1_1_view_model_1_1_v_m_1_1_error_view_model.html#afc515e9ed0fb954e12de3718611ab13e',1,'Projekt::ViewModel::VM::ErrorViewModel']]],
+  ['speed_11',['Speed',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#adc2f8581f4fe5b8dd9af3dfd70229723',1,'Projekt::Model::DataModels::Character']]],
+  ['spellitem_12',['SpellItem',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_item.html',1,'Projekt::Model::ApiResponses']]],
+  ['spellresults_13',['SpellResults',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_results.html',1,'Projekt::Model::ApiResponses']]],
+  ['spells_14',['Spells',['../class_projekt_1_1_model_1_1_api_responses_1_1_dnd_class_spell_response.html#ab176a687ae4c23f3d09a58d359606701',1,'Projekt::Model::ApiResponses::DndClassSpellResponse']]],
+  ['strength_15',['Strength',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#ab9943558a6fcdd64273eac618a83d829',1,'Projekt::Model::DataModels::Character']]],
+  ['supportedcultures_16',['supportedCultures',['../_program_8cs.html#ac9f560da89c8014ac216ef64d66f18e6',1,'Program.cs']]]
+];
