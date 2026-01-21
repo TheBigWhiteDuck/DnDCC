@@ -90,6 +90,18 @@
         <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">CHA: @Model.Charisma</div>
     </div>
 
+    <div>
+        <h3 class="title-font text-lg text-amber-900 mb-2">Bonusy ze statystyk</h3>
+        <div class="grid gap-3 md:grid-cols-3 text-sm">
+            <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">STR: @formatMod(Model.Strength)</div>
+            <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">DEX: @formatMod(Model.Dexterity)</div>
+            <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">CON: @formatMod(Model.Constitution)</div>
+            <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">INT: @formatMod(Model.Intelligence)</div>
+            <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">WIS: @formatMod(Model.Wisdom)</div>
+            <div class="bg-amber-50 border border-amber-900/20 rounded-lg p-3">CHA: @formatMod(Model.Charisma)</div>
+        </div>
+    </div>
+
     <div class="grid gap-4 md:grid-cols-2">
         <div>
             <h3 class="title-font text-lg text-amber-900 mb-2">Proficiencje</h3>

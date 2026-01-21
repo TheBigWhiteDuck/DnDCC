@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Projekt.Model.DataModels;
 
 namespace Projekt.Model.ApiResponses;
@@ -206,7 +207,8 @@ public class CharacterRequest
     /// <summary>
     /// Dane postaci.
     /// </summary>
-    public Character Character { get; set; }
+    [Required]
+    public Character Character { get; set; } = new();
 
     /// <summary>
     /// Lista wybranych biegłości.

@@ -65,6 +65,41 @@ namespace Projekt.Web.Controllers
         }
 
         /// <summary>
+        /// Zwraca listę postaci zalogowanego użytkownika do rzutu kością.
+        /// </summary>
+        [HttpGet]
+        public IActionResult DiceCharacters()
+        {
+            var userIdClaim = User
+                ?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)
+                ?.Value;
+            if (!int.TryParse(userIdClaim, out var currentUserId))
+            {
+                return Unauthorized(new { error = "Brak identyfikatora użytkownika." });
+            }
+
+            var characters = characterService
+                .GetCharacters(currentUserId)
+                .Select(c => new
+                {
+                    id = c.Id,
+                    name = c.Name,
+                    stats = new
+                    {
+                        strength = c.Strength,
+                        dexterity = c.Dexterity,
+                        constitution = c.Constitution,
+                        intelligence = c.Intelligence,
+                        wisdom = c.Wisdom,
+                        charisma = c.Charisma,
+                    },
+                })
+                .ToList();
+
+            return Ok(characters);
+        }
+
+        /// <summary>
         /// Usuwa spacje z przekazanego ciągu znaków.
         /// </summary>
         public string ClearSpaces(string sentence)
@@ -266,6 +301,27 @@ namespace Projekt.Web.Controllers
                     );
                 }
             }
+
+            if (request?.Character == null)
+            {
+                return BadRequest(new { error = "Brak danych postaci." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Character.Name)
+                || string.IsNullOrWhiteSpace(request.Character.Race)
+                || string.IsNullOrWhiteSpace(request.Character.Class)
+                || string.IsNullOrWhiteSpace(request.Character.Alignment))
+            {
+                return BadRequest(new { error = "Uzupelnij imie, rase, klase i alignment." });
+            }
+
+            request.Proficiencies ??= new List<string>();
+            request.Character.Name = request.Character.Name.Trim();
+            request.Character.Race = request.Character.Race.Trim();
+            request.Character.Class = request.Character.Class.Trim();
+            request.Character.Alignment = request.Character.Alignment.Trim();
+            request.Character.SubClass = request.Character.SubClass?.Trim() ?? string.Empty;
+            request.Character.Spells = request.Character.Spells?.Trim() ?? string.Empty;
 
             var className = request.Character.Class;
             var raceName = request.Character.Race;

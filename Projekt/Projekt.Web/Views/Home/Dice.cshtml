@@ -127,6 +127,47 @@
                 </div>
 
                 <div class="space-y-6">
+            @if (User?.Identity?.IsAuthenticated == true)
+            {
+                <div id="diceCharacterBonus" class="rounded-xl border border-amber-900/25 bg-white/80 p-4 space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-amber-700">Postac i bonus</div>
+                    <div>
+                        <label class="text-sm text-amber-900">Wybierz postac</label>
+                        <select id="characterSelect" class="w-full mt-1 px-3 py-2 border border-amber-900/20 rounded-lg bg-white/90"></select>
+                    </div>
+                    <div>
+                        <p class="text-sm text-amber-900 mb-2">Statystyka</p>
+                        <div class="flex flex-wrap gap-2">
+                            <label class="dice-option relative cursor-pointer">
+                                <input type="radio" name="statType" value="STR" checked />
+                                <span>STR</span>
+                            </label>
+                            <label class="dice-option relative cursor-pointer">
+                                <input type="radio" name="statType" value="DEX" />
+                                <span>DEX</span>
+                            </label>
+                            <label class="dice-option relative cursor-pointer">
+                                <input type="radio" name="statType" value="CON" />
+                                <span>CON</span>
+                            </label>
+                            <label class="dice-option relative cursor-pointer">
+                                <input type="radio" name="statType" value="INT" />
+                                <span>INT</span>
+                            </label>
+                            <label class="dice-option relative cursor-pointer">
+                                <input type="radio" name="statType" value="WIS" />
+                                <span>WIS</span>
+                            </label>
+                            <label class="dice-option relative cursor-pointer">
+                                <input type="radio" name="statType" value="CHA" />
+                                <span>CHA</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="characterHint" class="text-xs text-amber-700"></div>
+                </div>
+            }
+
                     <div>
                         <p class="text-sm uppercase tracking-wide text-amber-700 mb-3">Wybierz kostkę</p>
                         <div class="flex flex-wrap gap-2">
@@ -180,6 +221,8 @@
 @section Scripts {
 <script>
     (() => {
+        const serverAuthenticated = @((User?.Identity?.IsAuthenticated ?? false).ToString().ToLower());
+        const isAuthenticated = serverAuthenticated && !!localStorage.getItem('user');
         const cube = document.getElementById('diceCube');
         const defaultTransition = cube ? cube.style.transition : '';
         const faces = document.querySelectorAll('.dice-face-value');
@@ -189,11 +232,58 @@
         const historyList = document.getElementById('rollHistory');
         const currentDiceLabel = document.getElementById('currentDiceLabel');
         const clearHistoryButton = document.getElementById('clearHistoryButton');
+        const characterSelect = document.getElementById('characterSelect');
+        const statInputs = document.querySelectorAll('input[name="statType"]');
+        const characterHint = document.getElementById('characterHint');
+        const STAT_KEYS = { STR: 'strength', DEX: 'dexterity', CON: 'constitution', INT: 'intelligence', WIS: 'wisdom', CHA: 'charisma' };
+        let characters = [];
         let history = [];
 
         function selectedSides() {
             const selected = document.querySelector('input[name="diceType"]:checked');
             return selected ? parseInt(selected.value, 10) : 6;
+        }
+
+        function selectedStat() {
+            const selected = document.querySelector('input[name="statType"]:checked');
+            return selected ? selected.value : null;
+        }
+
+        function selectedCharacter() {
+            if (!characterSelect) return null;
+            return characters.find(character => String(character.id) == characterSelect.value);
+        }
+
+        function calculateMod(value) {
+            const numeric = Number(value);
+            if (Number.isNaN(numeric)) return 0;
+            return Math.floor((numeric - 10) / 2);
+        }
+
+        async function loadCharacters() {
+            if (!isAuthenticated || !characterSelect) return;
+            try {
+                const res = await fetch('@Url.Action("DiceCharacters", "Character")');
+                if (!res.ok) {
+                    characterHint.textContent = 'Nie udalo sie pobrac postaci.';
+                    return;
+                }
+                characters = await res.json();
+                characterSelect.innerHTML = '';
+                if (!characters.length) {
+                    characterHint.textContent = 'Nie masz jeszcze zadnych postaci.';
+                    return;
+                }
+                characterHint.textContent = '';
+                characters.forEach(character => {
+                    const opt = document.createElement('option');
+                    opt.value = character.id;
+                    opt.textContent = character.name;
+                    characterSelect.appendChild(opt);
+                });
+            } catch {
+                characterHint.textContent = 'Nie udalo sie pobrac postaci.';
+            }
         }
 
         function rotateCube() {
@@ -246,11 +336,26 @@
             rotateCube();
 
             setTimeout(() => {
-                const value = Math.floor(Math.random() * sides) + 1;
-                updateFaces(value);
-                resultText.textContent = value;
-                description.textContent = `Wynik rzutu kością d${sides}.`;
-                addHistoryEntry({ dice: sides, value });
+                const roll = Math.floor(Math.random() * sides) + 1;
+                let total = roll;
+                let desc = `Wynik rzutu kością d${sides}.`;
+
+                if (isAuthenticated) {
+                    const stat = selectedStat();
+                    const character = selectedCharacter();
+                    if (character && stat) {
+                        const statKey = STAT_KEYS[stat];
+                        const statValue = character.stats ? character.stats[statKey] : null;
+                        const mod = calculateMod(statValue);
+                        total = roll + mod;
+                        desc = `${character.name} | ${stat}: ${roll} ${mod >= 0 ? '+' : ''}${mod} = ${total}`;
+                    }
+                }
+
+                updateFaces(roll);
+                resultText.textContent = total;
+                description.textContent = desc;
+                addHistoryEntry({ dice: sides, value: total });
                 resetCubePosition();
                 rollButton.disabled = false;
                 rollButton.classList.remove('roll-pulse');
@@ -268,6 +373,14 @@
 
         handleDiceChange();
         renderHistory();
+        if (!isAuthenticated) {
+            const bonusPanel = document.getElementById('diceCharacterBonus');
+            if (bonusPanel) bonusPanel.classList.add('hidden');
+        }
+
+        if (isAuthenticated) {
+            loadCharacters();
+        }
     })();
 </script>
 }

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Projekt.Model.DataModels;
 
 /// <summary>
@@ -14,12 +16,14 @@ public class Character
     /// <summary>
     /// Imię postaci.
     /// </summary>
-    public string Name { get; set; }
+    [Required]
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Charakter (alignment) postaci, np. Lawful Good, Chaotic Neutral.
     /// </summary>
-    public string Alignment { get; set; }
+    [Required]
+    public string Alignment { get; set; } = string.Empty;
 
     /// <summary>Siła (STR).</summary>
     public int Strength { get; set; }
@@ -42,12 +46,20 @@ public class Character
     /// <summary>
     /// Rasa postaci (np. Human, Elf, Dragonborn).
     /// </summary>
-    public string Race { get; set; }
+    [Required]
+    public string Race { get; set; } = string.Empty;
 
     /// <summary>
     /// Klasa postaci (np. Fighter, Wizard).
     /// </summary>
-    public string Class { get; set; }
+    [Required]
+    public string Class { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Podklasa postaci (np. Battle Master, Evocation).
+    /// </summary>
+    [Required]
+    public string SubClass { get; set; } = string.Empty;
 
     /// <summary>
     /// Lista biegłości wybranych przez użytkownika.
@@ -87,6 +99,12 @@ public class Character
     public int Speed { get; set; }
 
     /// <summary>
+    /// Lista zaklec w formie tekstu lub JSON.
+    /// </summary>
+    [Required]
+    public string Spells { get; set; } = string.Empty;
+
+    /// <summary>
     /// Dodatkowe notatki fabularne lub mechaniczne.
     /// </summary>
     public string? Notes { get; set; }
@@ -99,7 +117,7 @@ public class Character
     /// <summary>
     /// Id użytkownika będącego właścicielem postaci.
     /// </summary>
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     /// <summary>
     /// Użytkownik, do którego należy postać.

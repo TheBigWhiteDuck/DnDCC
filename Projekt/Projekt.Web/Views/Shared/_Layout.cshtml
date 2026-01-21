@@ -171,6 +171,52 @@
         details { display: block; width: 100%; }
         summary { list-style: none; }
         summary::-webkit-details-marker { display: none; }
+
+        .chat-fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, var(--btn-1), var(--btn-2));
+            color: #2b1c10;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+            animation: chatPulse 2.2s ease-in-out infinite;
+        }
+        .chat-hint {
+            background: rgba(0,0,0,0.75);
+            color: #fef3c7;
+            padding: 0.6rem 0.9rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(200,155,79,0.45);
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+        }
+        .chat-panel {
+            width: 380px;
+            max-width: calc(100vw - 2.5rem);
+        }
+        .chat-message {
+            max-width: 85%;
+            padding: 0.6rem 0.9rem;
+            border-radius: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .chat-message.user {
+            margin-left: auto;
+            background: rgba(200,155,79,0.25);
+            border: 1px solid rgba(78,47,31,0.35);
+        }
+        .chat-message.assistant {
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(78,47,31,0.2);
+        }
+        @@keyframes chatPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200,155,79,0.4); }
+            50% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(200,155,79,0); }
+        }
     </style>
     @RenderSection("Styles", required: false)
 </head>
@@ -209,6 +255,41 @@
     <footer class="h-[30px] bg-black text-amber-100 flex items-center justify-center text-xs">
         © 2025 All rights reserved by DnDCC. v 1.0
     </footer>
+
+    @if (User?.Identity?.IsAuthenticated == true)
+    {
+        <div id="dndccChatWidget" class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+            <div id="dndccChatHint" class="chat-hint">Porozmawiaj z DnDCC AI 👋</div>
+            <button id="dndccChatButton" class="chat-fab" aria-label="Otworz czat">
+                <i class="fa-solid fa-comment-dots text-xl"></i>
+            </button>
+        </div>
+
+        <div id="dndccChatPanel" class="hidden fixed bottom-24 right-6 z-50 chat-panel">
+            <div class="parchment rounded-2xl border border-amber-900/30 shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-amber-900/20 bg-black/10">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-amber-700">DnDCC AI</p>
+                        <p class="text-base text-amber-900">Pomocnik Dungeons & Dragons</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-amber-100 border border-amber-900/30 flex items-center justify-center text-amber-800">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <button id="dndccChatClose" class="text-amber-900 text-xl" aria-label="Zamknij">&times;</button>
+                    </div>
+                </div>
+                <div id="dndccChatMessages" class="px-4 py-3 space-y-3 text-base text-amber-900 h-[35vh] overflow-y-auto"></div>
+                <div class="border-t border-amber-900/20 px-3 py-3 bg-white/80">
+                    <form id="dndccChatForm" class="flex items-center gap-2">
+                        <input id="dndccChatInput" class="flex-1 px-3 py-2 rounded-lg border border-amber-900/20 bg-white/90 text-base" placeholder="Zapytaj o DnD..." />
+                        <button id="dndccChatSend" class="btn-primary px-3 py-2 rounded-lg text-sm font-semibold border border-amber-900/30" type="submit">Wyślij</button>
+                    </form>
+                    <div id="dndccChatError" class="hidden mt-2 text-xs text-red-700"></div>
+                </div>
+            </div>
+        </div>
+    }
 
     <!-- Modal auth (login & register) -->
     <div id="authModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center px-4">
@@ -818,6 +899,119 @@
         });
 
         checkAuth();
+    </script>
+
+    <script>
+        (() => {
+            const widget = document.getElementById('dndccChatWidget');
+            const hasClientUser = !!localStorage.getItem('user');
+            if (!hasClientUser) {
+                widget?.classList.add('hidden');
+                return;
+            }
+            const panel = document.getElementById('dndccChatPanel');
+            const button = document.getElementById('dndccChatButton');
+            const closeBtn = document.getElementById('dndccChatClose');
+            const hint = document.getElementById('dndccChatHint');
+            const messagesEl = document.getElementById('dndccChatMessages');
+            const form = document.getElementById('dndccChatForm');
+            const input = document.getElementById('dndccChatInput');
+            const errorEl = document.getElementById('dndccChatError');
+
+            if (!widget || !panel || !button || !messagesEl || !form || !input) return;
+
+            const messages = [
+                { role: 'assistant', content: 'Czesc! Zapytaj mnie o zasady DnD, klasy, zaklecia albo prowadzenie sesji.' }
+            ];
+
+            function renderMessages() {
+                messagesEl.innerHTML = '';
+                messages.forEach(msg => {
+                    const item = document.createElement('div');
+                    item.className = `chat-message ${msg.role === 'user' ? 'user' : 'assistant'}`;
+                    item.textContent = msg.content;
+                    messagesEl.appendChild(item);
+                });
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+
+            function showError(message) {
+                if (!errorEl) return;
+                errorEl.textContent = message;
+                errorEl.classList.remove('hidden');
+            }
+
+            function clearError() {
+                if (!errorEl) return;
+                errorEl.textContent = '';
+                errorEl.classList.add('hidden');
+            }
+
+            function openChat() {
+                panel.classList.remove('hidden');
+                if (hint) hint.classList.add('hidden');
+                input.focus();
+            }
+
+            function closeChat() {
+                panel.classList.add('hidden');
+                if (hint) hint.classList.remove('hidden');
+            }
+
+            button.addEventListener('click', () => {
+                if (panel.classList.contains('hidden')) {
+                    openChat();
+                } else {
+                    closeChat();
+                }
+            });
+
+            closeBtn?.addEventListener('click', closeChat);
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                clearError();
+                const text = input.value.trim();
+                if (!text) return;
+
+                messages.push({ role: 'user', content: text });
+                input.value = '';
+                renderMessages();
+
+                const payload = messages.slice();
+                const placeholder = { role: 'assistant', content: '...' };
+                messages.push(placeholder);
+                renderMessages();
+
+                input.disabled = true;
+
+                try {
+                    const res = await fetch('/api/chat/dnd', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: payload })
+                    });
+                    if (!res.ok) {
+                        showError('Nie udalo sie uzyskac odpowiedzi AI.');
+                        messages.pop();
+                        renderMessages();
+                        return;
+                    }
+                    const data = await res.json();
+                    placeholder.content = data.reply || 'Brak odpowiedzi.';
+                    renderMessages();
+                } catch {
+                    showError('Blad polaczenia z AI.');
+                    messages.pop();
+                    renderMessages();
+                } finally {
+                    input.disabled = false;
+                    input.focus();
+                }
+            });
+
+            renderMessages();
+        })();
     </script>
 </body>
 </html>
