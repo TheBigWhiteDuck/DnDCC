@@ -53,6 +53,35 @@
     (() => {
         const buyBtn = document.getElementById('buyPremiumButton');
         const navAuthButton = document.getElementById('authButton');
+        const urlParams = new URLSearchParams(window.location.search);
+
+        async function confirmCheckout(sessionId) {
+            if (!sessionId) return;
+            try {
+                const res = await fetch(`/api/stripe/confirm-checkout?session_id=${encodeURIComponent(sessionId)}`, {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    alert(data.error || 'Nie udało się potwierdzić płatności.');
+                    return;
+                }
+                const result = await res.json();
+                localStorage.setItem('user', JSON.stringify(result));
+                alert('Subskrypcja Premium została aktywowana na Twoim koncie.');
+                history.replaceState({}, document.title, window.location.pathname);
+                location.reload();
+            } catch (e) {
+                console.error('Confirm checkout error:', e);
+                alert('Problem z połączeniem podczas potwierdzania płatności.');
+            }
+        }
+
+        if (urlParams.get('checkout') === 'success') {
+            const sessionId = urlParams.get('session_id');
+            confirmCheckout(sessionId);
+        }
         buyBtn?.addEventListener('click', async () => {
             const stored = localStorage.getItem('user');
             if (!stored) {
@@ -66,22 +95,26 @@
             buyBtn.textContent = 'Przetwarzanie płatności...';
 
             try {
-                const res = await fetch('/api/auth/upgrade-premium', {
-                    method: 'POST'
+                const res = await fetch('/api/stripe/create-checkout-session', {
+                    method: 'POST',
+                    credentials: 'same-origin'
                 });
 
                 if (!res.ok) {
                     const data = await res.json().catch(() => ({}));
-                    alert(data.error || 'Nie udało się aktywować Premium.');
+                    alert(data.error || 'Nie udało się uruchomić płatności.');
                     return;
                 }
 
-                const result = await res.json();
-                localStorage.setItem('user', JSON.stringify(result));
-                alert('Subskrypcja Premium została aktywowana na Twoim koncie.');
-                location.reload();
+                const data = await res.json();
+                if (!data.url) {
+                    alert('Brak adresu przekierowania do Stripe.');
+                    return;
+                }
+
+                window.location.href = data.url;
             } catch (e) {
-                console.error('Upgrade premium error:', e);
+                console.error('Checkout error:', e);
                 alert('Problem z połączeniem podczas aktywacji Premium.');
             } finally {
                 buyBtn.disabled = false;
