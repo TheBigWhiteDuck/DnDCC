@@ -8,6 +8,8 @@ var hierarchy =
     ] ],
     [ "Projekt.Model.DataModels.Character", "class_projekt_1_1_model_1_1_data_models_1_1_character.html", null ],
     [ "Projekt.Model.ApiResponses.CharacterRequest", "class_projekt_1_1_model_1_1_api_responses_1_1_character_request.html", null ],
+    [ "Projekt.Web.Controllers.ChatController.ChatMessage", "class_projekt_1_1_web_1_1_controllers_1_1_chat_controller_1_1_chat_message.html", null ],
+    [ "Projekt.Web.Controllers.ChatController.ChatRequest", "class_projekt_1_1_web_1_1_controllers_1_1_chat_controller_1_1_chat_request.html", null ],
     [ "Projekt.Model.ApiResponses.ChoiceModel", "class_projekt_1_1_model_1_1_api_responses_1_1_choice_model.html", null ],
     [ "Controller", null, [
       [ "Projekt.Web.Controllers.BaseController", "class_projekt_1_1_web_1_1_controllers_1_1_base_controller.html", [
@@ -17,7 +19,9 @@ var hierarchy =
     ] ],
     [ "ControllerBase", null, [
       [ "Projekt.Web.Controllers.AuthController", "class_projekt_1_1_web_1_1_controllers_1_1_auth_controller.html", null ],
-      [ "Projekt.Web.Controllers.AvatarController", "class_projekt_1_1_web_1_1_controllers_1_1_avatar_controller.html", null ]
+      [ "Projekt.Web.Controllers.AvatarController", "class_projekt_1_1_web_1_1_controllers_1_1_avatar_controller.html", null ],
+      [ "Projekt.Web.Controllers.ChatController", "class_projekt_1_1_web_1_1_controllers_1_1_chat_controller.html", null ],
+      [ "Projekt.Web.Controllers.StripeController", "class_projekt_1_1_web_1_1_controllers_1_1_stripe_controller.html", null ]
     ] ],
     [ "Projekt.Model.ApiResponses.DndClassProficiencyResponse", "class_projekt_1_1_model_1_1_api_responses_1_1_dnd_class_proficiency_response.html", null ],
     [ "Projekt.Model.ApiResponses.DndClassSpellResponse", "class_projekt_1_1_model_1_1_api_responses_1_1_dnd_class_spell_response.html", null ],
@@ -32,6 +36,9 @@ var hierarchy =
     ] ],
     [ "IdentityDbContext", null, [
       [ "Projekt.DAL.ApplicationDbContext", "class_projekt_1_1_d_a_l_1_1_application_db_context.html", null ]
+    ] ],
+    [ "IdentityRole", null, [
+      [ "Projekt.Model.DataModels.Role", "class_projekt_1_1_model_1_1_data_models_1_1_role.html", null ]
     ] ],
     [ "IdentityUser", null, [
       [ "Projekt.Model.DataModels.User", "class_projekt_1_1_model_1_1_data_models_1_1_user.html", null ]

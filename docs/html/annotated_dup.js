@@ -35,6 +35,7 @@ var annotated_dup =
         [ "DataModels", "namespace_projekt_1_1_model_1_1_data_models.html", [
           [ "Character", "class_projekt_1_1_model_1_1_data_models_1_1_character.html", "class_projekt_1_1_model_1_1_data_models_1_1_character" ],
           [ "Item", "class_projekt_1_1_model_1_1_data_models_1_1_item.html", "class_projekt_1_1_model_1_1_data_models_1_1_item" ],
+          [ "Role", "class_projekt_1_1_model_1_1_data_models_1_1_role.html", null ],
           [ "User", "class_projekt_1_1_model_1_1_data_models_1_1_user.html", "class_projekt_1_1_model_1_1_data_models_1_1_user" ]
         ] ]
       ] ],
@@ -71,7 +72,9 @@ var annotated_dup =
           [ "AvatarController", "class_projekt_1_1_web_1_1_controllers_1_1_avatar_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_avatar_controller" ],
           [ "BaseController", "class_projekt_1_1_web_1_1_controllers_1_1_base_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_base_controller" ],
           [ "CharacterController", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller" ],
-          [ "HomeController", "class_projekt_1_1_web_1_1_controllers_1_1_home_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_home_controller" ]
+          [ "ChatController", "class_projekt_1_1_web_1_1_controllers_1_1_chat_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_chat_controller" ],
+          [ "HomeController", "class_projekt_1_1_web_1_1_controllers_1_1_home_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_home_controller" ],
+          [ "StripeController", "class_projekt_1_1_web_1_1_controllers_1_1_stripe_controller.html", "class_projekt_1_1_web_1_1_controllers_1_1_stripe_controller" ]
         ] ]
       ] ]
     ] ]

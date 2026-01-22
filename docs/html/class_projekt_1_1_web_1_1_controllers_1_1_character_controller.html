@@ -110,6 +110,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa6c969a8ae9e7f02bf5c24316473cbd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tworzy instancję <a class="el" href="class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html" title="Kontroler do zarządzania postaciami graczy, wyposażeniem, notatkami oraz generowaniem próbek postaci.">CharacterController</a> i inicjalizuje zależności: HttpClient, <a class="el" href="class_projekt_1_1_services_1_1_concrete_services_1_1_character_service.html" title="Serwis do zarządzania postaciami graczy, obsługuje CRUD postaci i przedmiotów.">CharacterService</a>, logger, mapper, lokalizator i środowisko web.  <br /></td></tr>
 <tr class="memitem:aec41b4cfa4fb49910e74d5e29299a762" id="r_aec41b4cfa4fb49910e74d5e29299a762"><td class="memItemLeft">IActionResult&#160;</td><td class="memItemRight"><a class="el" href="#aec41b4cfa4fb49910e74d5e29299a762">Index</a> ()</td></tr>
 <tr class="memdesc:aec41b4cfa4fb49910e74d5e29299a762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wyświetla listę postaci zalogowanego użytkownika.  <br /></td></tr>
+<tr class="memitem:a4e20324ef9a2753ac27d2f175cde28aa" id="r_a4e20324ef9a2753ac27d2f175cde28aa"><td class="memItemLeft">IActionResult&#160;</td><td class="memItemRight"><a class="el" href="#a4e20324ef9a2753ac27d2f175cde28aa">DiceCharacters</a> ()</td></tr>
+<tr class="memdesc:a4e20324ef9a2753ac27d2f175cde28aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zwraca listę postaci zalogowanego użytkownika do rzutu kością.  <br /></td></tr>
 <tr class="memitem:a55d76fed8af01a8b1332195db6651cfb" id="r_a55d76fed8af01a8b1332195db6651cfb"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#a55d76fed8af01a8b1332195db6651cfb">ClearSpaces</a> (string sentence)</td></tr>
 <tr class="memdesc:a55d76fed8af01a8b1332195db6651cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Usuwa spacje z przekazanego ciągu znaków.  <br /></td></tr>
 <tr class="memitem:a8132e3982f01a4b2aebe78cd4f005f1f" id="r_a8132e3982f01a4b2aebe78cd4f005f1f"><td class="memItemLeft">async Task&lt; IActionResult &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8132e3982f01a4b2aebe78cd4f005f1f">Details</a> (int id)</td></tr>
@@ -378,6 +380,33 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Wyświetla szczegóły postaci, w tym cechy i umiejętności. </p>
+
+</div>
+</div>
+<a id="a4e20324ef9a2753ac27d2f175cde28aa" name="a4e20324ef9a2753ac27d2f175cde28aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e20324ef9a2753ac27d2f175cde28aa">&#9670;&#160;</a></span>DiceCharacters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IActionResult Projekt.Web.Controllers.CharacterController.DiceCharacters </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Zwraca listę postaci zalogowanego użytkownika do rzutu kością. </p>
 
 </div>
 </div>

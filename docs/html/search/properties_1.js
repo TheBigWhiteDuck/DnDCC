@@ -10,6 +10,7 @@ var searchData=
   ['choosecount_7',['ChooseCount',['../class_projekt_1_1_model_1_1_api_responses_1_1_choice_model.html#ae18a52bda9feb169f538db6bfe4685bb',1,'Projekt.Model.ApiResponses.ChoiceModel.ChooseCount'],['../class_projekt_1_1_model_1_1_api_responses_1_1_item_choice_model.html#a653aaca3f387944adaea2777796370dc',1,'Projekt.Model.ApiResponses.ItemChoiceModel.ChooseCount']]],
   ['class_8',['Class',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a8353ddb25df407eafb0633ce9b22677f',1,'Projekt::Model::DataModels::Character']]],
   ['constitution_9',['Constitution',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a8f3b89cc242b26761de4a0020b79ab32',1,'Projekt::Model::DataModels::Character']]],
-  ['count_10',['Count',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_results.html#ad467aa141e9022acef347d771165df42',1,'Projekt.Model.ApiResponses.SpellResults.Count'],['../class_projekt_1_1_model_1_1_api_responses_1_1_results.html#aa1f9b684001506d3d79835b4cdbafc3c',1,'Projekt.Model.ApiResponses.Results.Count']]],
-  ['currenthp_11',['CurrentHP',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a66d4517f6efa9234689d211ddbca824b',1,'Projekt::Model::DataModels::Character']]]
+  ['content_10',['Content',['../class_projekt_1_1_web_1_1_controllers_1_1_chat_controller_1_1_chat_message.html#a407d68b234d3bfa61f0a5685227bfeca',1,'Projekt::Web::Controllers::ChatController::ChatMessage']]],
+  ['count_11',['Count',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_results.html#ad467aa141e9022acef347d771165df42',1,'Projekt.Model.ApiResponses.SpellResults.Count'],['../class_projekt_1_1_model_1_1_api_responses_1_1_results.html#aa1f9b684001506d3d79835b4cdbafc3c',1,'Projekt.Model.ApiResponses.Results.Count']]],
+  ['currenthp_12',['CurrentHP',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a66d4517f6efa9234689d211ddbca824b',1,'Projekt::Model::DataModels::Character']]]
 ];

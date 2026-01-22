@@ -4,6 +4,6 @@ var dir_6d430c184c83cd8c3dc0b6fd61fba230 =
     [ "Character.cs", "_character_8cs.html", "_character_8cs" ],
     [ "CharacterItem.cs", "_character_item_8cs.html", null ],
     [ "Item.cs", "_item_8cs.html", "_item_8cs" ],
-    [ "Role.cs", "_role_8cs.html", null ],
+    [ "Role.cs", "_role_8cs.html", "_role_8cs" ],
     [ "User.cs", "_user_8cs.html", "_user_8cs" ]
 ];

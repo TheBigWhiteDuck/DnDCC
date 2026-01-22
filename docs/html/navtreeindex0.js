@@ -27,9 +27,10 @@ var NAVTREEINDEX0 =
 "_character_controller_8cs.html":[2,0,0,4,0,3],
 "_character_item_8cs.html":[2,0,0,1,0,2],
 "_character_service_8cs.html":[2,0,0,2,0,2],
+"_chat_controller_8cs.html":[2,0,0,4,0,4],
 "_error_view_model_8cs.html":[2,0,0,3,1,1],
 "_forgot_password_vm_8cs.html":[2,0,0,3,1,2],
-"_home_controller_8cs.html":[2,0,0,4,0,4],
+"_home_controller_8cs.html":[2,0,0,4,0,5],
 "_i_auth_service_8cs.html":[2,0,0,2,2,0],
 "_i_character_service_8cs.html":[2,0,0,2,2,1],
 "_item_8cs.html":[2,0,0,1,0,3],
@@ -91,6 +92,7 @@ var NAVTREEINDEX0 =
 "_register_user_vm_8cs.html":[2,0,0,3,1,5],
 "_reset_password_vm_8cs.html":[2,0,0,3,1,6],
 "_role_8cs.html":[2,0,0,1,0,4],
+"_stripe_controller_8cs.html":[2,0,0,4,0,6],
 "_user_8cs.html":[2,0,0,1,0,5],
 "annotated.html":[1,0],
 "class_projekt_1_1_d_a_l_1_1_application_db_context.html":[0,0,0,0,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#a777b1a6a3fda8ea2b9675fdf0fd35596":[1,0,0,1,0,4,2],
 "class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#aa7b917fbbc666e8d498d3c1b9495fb28":[0,0,0,1,0,4,0],
 "class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#aa7b917fbbc666e8d498d3c1b9495fb28":[1,0,0,1,0,4,0],
-"class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#ab210cfbac45b3f7a175067a8072792f7":[0,0,0,1,0,4,3],
-"class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#ab210cfbac45b3f7a175067a8072792f7":[1,0,0,1,0,4,3],
-"class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#ae9a9897ebc3620d3ded86723d83aa450":[0,0,0,1,0,4,1]
+"class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#ab210cfbac45b3f7a175067a8072792f7":[0,0,0,1,0,4,3]
 };

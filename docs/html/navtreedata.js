@@ -53,8 +53,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "20251012092330___initial_8_designer_8cs.html",
-"class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#ae9a9897ebc3620d3ded86723d83aa450",
-"class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a2ec7017d5c9345cc68516f7af71455ff"
+"class_projekt_1_1_model_1_1_api_responses_1_1_proficiency_choice.html#ab210cfbac45b3f7a175067a8072792f7",
+"class_projekt_1_1_web_1_1_controllers_1_1_base_controller.html#ad627be1b89a161c1b539b7540c93ff1e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

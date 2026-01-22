@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['user_2ecs_0',['User.cs',['../_user_8cs.html',1,'']]]
+  ['stripecontroller_2ecs_0',['StripeController.cs',['../_stripe_controller_8cs.html',1,'']]]
 ];

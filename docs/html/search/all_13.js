@@ -14,7 +14,10 @@ var searchData=
   ['speed_11',['Speed',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#adc2f8581f4fe5b8dd9af3dfd70229723',1,'Projekt::Model::DataModels::Character']]],
   ['spellitem_12',['SpellItem',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_item.html',1,'Projekt::Model::ApiResponses']]],
   ['spellresults_13',['SpellResults',['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_results.html',1,'Projekt::Model::ApiResponses']]],
-  ['spells_14',['Spells',['../class_projekt_1_1_model_1_1_api_responses_1_1_dnd_class_spell_response.html#ab176a687ae4c23f3d09a58d359606701',1,'Projekt::Model::ApiResponses::DndClassSpellResponse']]],
+  ['spells_14',['Spells',['../class_projekt_1_1_model_1_1_api_responses_1_1_dnd_class_spell_response.html#ab176a687ae4c23f3d09a58d359606701',1,'Projekt.Model.ApiResponses.DndClassSpellResponse.Spells'],['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a42adba111f7a39a077b24bd92df6cb62',1,'Projekt.Model.DataModels.Character.Spells']]],
   ['strength_15',['Strength',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#ab9943558a6fcdd64273eac618a83d829',1,'Projekt::Model::DataModels::Character']]],
-  ['supportedcultures_16',['supportedCultures',['../_program_8cs.html#ac9f560da89c8014ac216ef64d66f18e6',1,'Program.cs']]]
+  ['stripecontroller_16',['StripeController',['../class_projekt_1_1_web_1_1_controllers_1_1_stripe_controller.html',1,'Projekt.Web.Controllers.StripeController'],['../class_projekt_1_1_web_1_1_controllers_1_1_stripe_controller.html#a2ec14141342ad98e616e9be257709973',1,'Projekt.Web.Controllers.StripeController.StripeController()']]],
+  ['stripecontroller_2ecs_17',['StripeController.cs',['../_stripe_controller_8cs.html',1,'']]],
+  ['subclass_18',['SubClass',['../class_projekt_1_1_model_1_1_data_models_1_1_character.html#a7a9304dd01c37db754319d17be7323ad',1,'Projekt::Model::DataModels::Character']]],
+  ['supportedcultures_19',['supportedCultures',['../_program_8cs.html#ac9f560da89c8014ac216ef64d66f18e6',1,'Program.cs']]]
 ];

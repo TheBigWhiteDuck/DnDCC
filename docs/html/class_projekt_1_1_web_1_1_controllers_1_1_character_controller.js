@@ -7,6 +7,7 @@ var class_projekt_1_1_web_1_1_controllers_1_1_character_controller =
     [ "ClearSpaces", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a55d76fed8af01a8b1332195db6651cfb", null ],
     [ "Delete", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a91057808fce364caa46b0e18ae1174d3", null ],
     [ "Details", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a8132e3982f01a4b2aebe78cd4f005f1f", null ],
+    [ "DiceCharacters", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a4e20324ef9a2753ac27d2f175cde28aa", null ],
     [ "Equipment", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a97faca97a8dbc4d6a02f27347fa88455", null ],
     [ "GetItems", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a28d7d45c67709e702a91ed7b52856c0a", null ],
     [ "GetItemsByCategory", "class_projekt_1_1_web_1_1_controllers_1_1_character_controller.html#a30dd8c8b1f142b1e6220fce170e5433a", null ],

@@ -16,10 +16,12 @@ var class_projekt_1_1_model_1_1_data_models_1_1_character =
     [ "Proficiencies", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#af606db47657eb133683068a7f7f56a94", null ],
     [ "Race", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a9790544d480a67e5e56b7498cc2a272f", null ],
     [ "Speed", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#adc2f8581f4fe5b8dd9af3dfd70229723", null ],
+    [ "Spells", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a42adba111f7a39a077b24bd92df6cb62", null ],
     [ "Strength", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#ab9943558a6fcdd64273eac618a83d829", null ],
+    [ "SubClass", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a7a9304dd01c37db754319d17be7323ad", null ],
     [ "TemporaryHP", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#af02a0751fe7b28879fa2747c68b05aa2", null ],
     [ "Traits", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#aa7baef50dc9280a802c80a1dea29ed64", null ],
     [ "User", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a3462c2d3db1a2571920f34e6bbacbf61", null ],
-    [ "UserId", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a2aa24f60af56986af3c3a4d2aab97056", null ],
+    [ "UserId", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a9fbab159fb5267443531f42eda02893f", null ],
     [ "Wisdom", "class_projekt_1_1_model_1_1_data_models_1_1_character.html#a7936f860bdd853170d84ec6ee990691c", null ]
 ];

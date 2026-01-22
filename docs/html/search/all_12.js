@@ -15,7 +15,8 @@ var searchData=
   ['resetpasswordvm_12',['ResetPasswordVm',['../class_projekt_1_1_view_model_1_1_v_m_1_1_reset_password_vm.html',1,'Projekt::ViewModel::VM']]],
   ['resetpasswordvm_2ecs_13',['ResetPasswordVm.cs',['../_reset_password_vm_8cs.html',1,'']]],
   ['results_14',['Results',['../class_projekt_1_1_model_1_1_api_responses_1_1_results.html',1,'Projekt.Model.ApiResponses.Results'],['../class_projekt_1_1_model_1_1_api_responses_1_1_spell_results.html#aea5fe59d4e53327b3de8e9f0d6327963',1,'Projekt.Model.ApiResponses.SpellResults.Results']]],
-  ['role_2ecs_15',['Role.cs',['../_role_8cs.html',1,'']]],
-  ['roles_16',['Roles',['../class_projekt_1_1_view_model_1_1_v_m_1_1_auth_result_vm.html#a1875030612eacaeae30689d5031f5602',1,'Projekt::ViewModel::VM::AuthResultVm']]],
-  ['run_17',['Run',['../_program_8cs.html#aaa3dbf02e269c3ef7e8546d290c6b3dd',1,'Program.cs']]]
+  ['role_15',['Role',['../class_projekt_1_1_model_1_1_data_models_1_1_role.html',1,'Projekt.Model.DataModels.Role'],['../class_projekt_1_1_web_1_1_controllers_1_1_chat_controller_1_1_chat_message.html#a0fe0fb557f906627af6eb95ed0b138b3',1,'Projekt.Web.Controllers.ChatController.ChatMessage.Role']]],
+  ['role_2ecs_16',['Role.cs',['../_role_8cs.html',1,'']]],
+  ['roles_17',['Roles',['../class_projekt_1_1_view_model_1_1_v_m_1_1_auth_result_vm.html#a1875030612eacaeae30689d5031f5602',1,'Projekt::ViewModel::VM::AuthResultVm']]],
+  ['run_18',['Run',['../_program_8cs.html#aaa3dbf02e269c3ef7e8546d290c6b3dd',1,'Program.cs']]]
 ];

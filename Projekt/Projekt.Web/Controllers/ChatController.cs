@@ -19,23 +19,45 @@ public class ChatController : ControllerBase
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _config;
 
+    /// <summary>
+    /// Tworzy instancję ChatController i inicjalizuje zależności: HttpClientFactory, Configuration.
+    /// </summary>
     public ChatController(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
         _httpClientFactory = httpClientFactory;
         _config = config;
     }
 
+    /// <summary>
+    /// Reprezentuje pojedynczą wiadomość w czacie.
+    /// </summary>
     public class ChatMessage
     {
+        /// <summary>
+        /// Rola nadawcy wiadomości (user lub assistant).
+        /// </summary>
         public string Role { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Treść wiadomości.
+        /// </summary>
         public string Content { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Reprezentuje żądanie czatu zawierające historię wiadomości.
+    /// </summary>
     public class ChatRequest
     {
+        /// <summary>
+        /// Lista wiadomości czatu.
+        /// </summary>
         public List<ChatMessage> Messages { get; set; } = new();
     }
 
+    /// <summary>
+    /// Obsługuje rozmowę z asystentem AI dla DnD.
+    /// </summary>
     [HttpPost("dnd")]
     [Authorize]
     public async Task<IActionResult> DndChat([FromBody] ChatRequest request)
@@ -52,10 +74,14 @@ public class ChatController : ControllerBase
             + "Odpowiadaj krotko i jasno w jezyku polskim.";
 
         var safeMessages = (request.Messages ?? new List<ChatMessage>())
-            .Where(m => m != null
-                        && !string.IsNullOrWhiteSpace(m.Content)
-                        && (string.Equals(m.Role, "user", StringComparison.OrdinalIgnoreCase)
-                            || string.Equals(m.Role, "assistant", StringComparison.OrdinalIgnoreCase)))
+            .Where(m =>
+                m != null
+                && !string.IsNullOrWhiteSpace(m.Content)
+                && (
+                    string.Equals(m.Role, "user", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(m.Role, "assistant", StringComparison.OrdinalIgnoreCase)
+                )
+            )
             .Select(m => new
             {
                 role = string.Equals(m.Role, "assistant", StringComparison.OrdinalIgnoreCase)
@@ -70,10 +96,7 @@ public class ChatController : ControllerBase
             safeMessages = safeMessages.Skip(safeMessages.Count - 8).ToList();
         }
 
-        var messages = new List<object>
-        {
-            new { role = "system", content = systemPrompt },
-        };
+        var messages = new List<object> { new { role = "system", content = systemPrompt } };
         messages.AddRange(safeMessages);
 
         var body = new
@@ -85,23 +108,37 @@ public class ChatController : ControllerBase
         };
 
         var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer",
+            apiKey
+        );
         client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json")
+        );
 
-        var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
-        var response = await client.PostAsync("https://api.openai.com/v1/chat/completions", content);
+        var content = new StringContent(
+            JsonSerializer.Serialize(body),
+            Encoding.UTF8,
+            "application/json"
+        );
+        var response = await client.PostAsync(
+            "https://api.openai.com/v1/chat/completions",
+            content
+        );
         if (!response.IsSuccessStatusCode)
         {
             var err = await response.Content.ReadAsStringAsync();
-            return StatusCode((int)response.StatusCode, new { error = "Blad OpenAI", detail = err });
+            return StatusCode(
+                (int)response.StatusCode,
+                new { error = "Blad OpenAI", detail = err }
+            );
         }
 
         using var stream = await response.Content.ReadAsStreamAsync();
         using var doc = await JsonDocument.ParseAsync(stream);
         var root = doc.RootElement;
-        var reply = root
-            .GetProperty("choices")[0]
+        var reply = root.GetProperty("choices")[0]
             .GetProperty("message")
             .GetProperty("content")
             .GetString();

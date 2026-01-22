@@ -19,13 +19,19 @@ public class StripeController : ControllerBase
     private readonly IAuthService _authService;
     private readonly ILogger<StripeController> _logger;
 
+    /// <summary>
+    /// Tworzy instancję StripeController i inicjalizuje zależności: Configuration, AuthService, Logger.
+    /// </summary>
     public StripeController(IConfiguration config, IAuthService authService, ILogger<StripeController> logger)
     {
         _config = config;
         _authService = authService;
         _logger = logger;
     }
-
+    
+    /// <summary>
+    /// Uruchamia obsługę płatności Stripe.
+    /// </summary>
     [Authorize]
     [HttpPost("create-checkout-session")]
     public async Task<IActionResult> CreateCheckoutSession()
@@ -92,6 +98,9 @@ public class StripeController : ControllerBase
         return Ok(new { url = session.Url });
     }
 
+    /// <summary>
+    /// Przetwarza płatność.
+    /// </summary>
     [Authorize]
     [HttpGet("confirm-checkout")]
     public async Task<IActionResult> ConfirmCheckout([FromQuery(Name = "session_id")] string sessionId)
