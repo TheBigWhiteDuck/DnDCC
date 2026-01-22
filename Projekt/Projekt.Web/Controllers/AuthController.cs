@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
             new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true, // HTTPS
+                Secure = Request.IsHttps, // Allow HTTP on dev
                 SameSite = SameSiteMode.Lax,
                 Expires = result.ExpiresAt,
             }
@@ -65,7 +65,7 @@ public class AuthController : ControllerBase
             new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = Request.IsHttps, // Allow HTTP on dev
                 SameSite = SameSiteMode.Lax,
                 Expires = result.ExpiresAt,
             }
@@ -110,7 +110,7 @@ public class AuthController : ControllerBase
             new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = Request.IsHttps, // Allow HTTP on dev
                 SameSite = SameSiteMode.Lax,
                 Expires = result.ExpiresAt,
             }

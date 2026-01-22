@@ -29,36 +29,41 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <style>
         :root {
-            --bg: linear-gradient(135deg, #0c0a0f 0%, #1c1726 45%, #2d1b1b 100%);
-            --panel: #f6f0e5;
-            --panel-border: #d7c9b8;
-            --accent: #c89b4f;
-            --accent-dark: #4e2f1f;
+            --bg: linear-gradient(135deg, #0b0c12 0%, #1b1723 45%, #2b1f1b 100%);
+            --bg-image: url('/images/tlo.jpg');
+            --panel: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 232, 213, 0.94));
+            --panel-border: rgba(92, 64, 40, 0.35);
+            --accent: #d5aa63;
+            --accent-dark: #3f2a1c;
+            --ink: #23160e;
+            --glow: rgba(213, 170, 99, 0.4);
 
             /* Theme palette used to remap common Tailwind amber utilities */
-            --theme-text-900: #78350f;
-            --theme-text-800: #92400e;
-            --theme-text-700: #b45309;
-            --theme-text-100: #fef3c7;
-            --theme-text-50: #fffbeb;
+            --theme-text-900: #3b2314;
+            --theme-text-800: #5b341d;
+            --theme-text-700: #7a4528;
+            --theme-text-100: #f7e9cf;
+            --theme-text-50: #fff8e8;
 
-            --theme-surface-50: #fffbeb;
-            --theme-surface-100: #fef3c7;
-            --theme-surface-200: #fde68a;
+            --theme-surface-50: #fff8e8;
+            --theme-surface-100: #f9edd6;
+            --theme-surface-200: #f2d9b7;
 
-            --theme-border-rgb: 78 47 31;
+            --theme-border-rgb: 92 64 40;
 
-            --btn-1: #b68946;
-            --btn-2: #d6b06b;
+            --btn-1: #d1a35c;
+            --btn-2: #f0c279;
         }
 
         html[data-theme="night"] {
-            --bg: linear-gradient(135deg, #070a12 0%, #121a2a 45%, #1a1a26 100%);
-            /* Make panels/windows dark so light text stays readable */
-            --panel: #0e1729;
-            --panel-border: rgb(var(--theme-border-rgb) / 0.35);
+            --bg: linear-gradient(135deg, #070911 0%, #111826 45%, #1b1a24 100%);
+            --bg-image: url('/images/tlo1.jpg');
+            --panel: linear-gradient(180deg, rgba(17, 26, 40, 0.96), rgba(12, 18, 30, 0.96));
+            --panel-border: rgba(110, 145, 198, 0.35);
             --accent: #8fb3ff;
             --accent-dark: #2f3b55;
+            --ink: #e6eefc;
+            --glow: rgba(143, 179, 255, 0.35);
 
             /* Tell the browser to render native form controls in dark mode (number spinners, selects, etc.) */
             color-scheme: dark;
@@ -146,36 +151,119 @@
         }
         body {
             font-family: 'Crimson Pro', serif;
-            background: center/cover no-repeat url('/images/tlo.jpg'), var(--bg);
-            color: #1f140d;
+            background: center/cover no-repeat var(--bg-image), var(--bg);
+            color: var(--ink);
         }
         html[data-theme="night"] body {
             color: var(--theme-text-900);
         }
-        .title-font { font-family: 'Cinzel', serif; letter-spacing: 0.03em; }
+        .title-font { font-family: 'Cinzel', serif; letter-spacing: 0.05em; text-transform: uppercase; }
         .parchment {
             background: var(--panel);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+            box-shadow: 0 18px 38px rgba(4, 4, 8, 0.35);
             border: 1px solid var(--panel-border);
+            backdrop-filter: blur(6px);
         }
-        .nav-link { transition: color .2s ease, transform .2s ease; }
-        .nav-link:hover { color: var(--accent); transform: translateY(-1px); }
+        .site-header {
+            background: linear-gradient(135deg, rgba(8, 10, 16, 0.92), rgba(16, 13, 20, 0.82));
+            border-bottom: 1px solid rgba(213, 170, 99, 0.25);
+            box-shadow: 0 10px 30px rgba(4, 4, 8, 0.45);
+        }
+        .site-footer {
+            background: linear-gradient(120deg, rgba(5, 6, 9, 0.95), rgba(18, 13, 18, 0.9));
+            letter-spacing: 0.08em;
+        }
+        .nav-link {
+            border-radius: 999px;
+            border: 1px solid rgba(213, 170, 99, 0.35);
+            background: rgba(10, 10, 16, 0.55);
+            transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+            border-color: rgba(213, 170, 99, 0.6);
+            box-shadow: 0 10px 20px rgba(10, 10, 16, 0.4);
+        }
+        .nav-link:focus-visible {
+            outline: 2px solid var(--glow);
+            outline-offset: 2px;
+        }
         .btn-primary {
             background: linear-gradient(135deg, var(--btn-1), var(--btn-2));
             color: #2b1c10;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+            box-shadow: 0 16px 26px rgba(9, 6, 3, 0.35);
         }
         .btn-primary:hover { filter: brightness(1.05); }
-        .modal-backdrop { background: rgba(0,0,0,0.65); }
+        .modal-backdrop {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+        }
         .parchment { width: 100%; box-sizing: border-box; }
         details { display: block; width: 100%; }
         summary { list-style: none; }
         summary::-webkit-details-marker { display: none; }
+
+        .chat-fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, var(--btn-1), var(--btn-2));
+            color: #2b1c10;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 18px 28px rgba(0,0,0,0.4);
+            animation: chatPulse 2.2s ease-in-out infinite;
+        }
+        .chat-hint {
+            background: rgba(8, 8, 12, 0.8);
+            color: #f7e9cf;
+            padding: 0.6rem 0.9rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(213, 170, 99, 0.45);
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+        }
+        .chat-panel {
+            width: 380px;
+            max-width: calc(100vw - 2.5rem);
+        }
+        .chat-message {
+            max-width: 85%;
+            padding: 0.6rem 0.9rem;
+            border-radius: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .chat-message.user {
+            margin-left: auto;
+            background: rgba(200,155,79,0.25);
+            border: 1px solid rgba(78,47,31,0.35);
+        }
+        .chat-message.assistant {
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(78,47,31,0.2);
+        }
+        html[data-theme="night"] .chat-message.assistant {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #141218;
+        }
+        html[data-theme="night"] .chat-message.user {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f5f8ff;
+        }
+        @@keyframes chatPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200,155,79,0.4); }
+            50% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(200,155,79,0); }
+        }
     </style>
     @RenderSection("Styles", required: false)
 </head>
 <body class="min-h-screen flex flex-col">
-    <header class="border-b border-amber-900/30 bg-black/40 backdrop-blur sticky top-0 z-40">
+    <header class="site-header border-b border-amber-900/30 bg-black/40 backdrop-blur sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between text-amber-100">
             <a href="@Url.Action("HomePage","Home")" class="title-font text-xl tracking-wide">DnDCC</a>
             <nav id="mainNav" class="grid gap-3 text-sm uppercase tracking-wide items-center">
@@ -201,14 +289,49 @@
             </nav>
         </div>
     </header>
-    <main class="flex-1 max-w-6xl mx-auto px-4 py-8">
-        <div class="parchment rounded-2xl p-6 md:p-8">
+    <main class="site-main flex-1 max-w-6xl mx-auto px-4 py-8">
+        <div class="parchment view-shell rounded-2xl p-6 md:p-8">
             @RenderBody()
         </div>
     </main>
-    <footer class="h-[30px] bg-black text-amber-100 flex items-center justify-center text-xs">
+    <footer class="site-footer h-[30px] bg-black text-amber-100 flex items-center justify-center text-xs">
         © 2025 All rights reserved by DnDCC. v 1.0
     </footer>
+
+    @if (User?.Identity?.IsAuthenticated == true)
+    {
+        <div id="dndccChatWidget" class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+            <div id="dndccChatHint" class="chat-hint">Porozmawiaj z DnDCC AI 👋</div>
+            <button id="dndccChatButton" class="chat-fab" aria-label="Otworz czat">
+                <i class="fa-solid fa-comment-dots text-xl"></i>
+            </button>
+        </div>
+
+        <div id="dndccChatPanel" class="hidden fixed bottom-24 right-6 z-50 chat-panel">
+            <div class="parchment rounded-2xl border border-amber-900/30 shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-amber-900/20 bg-black/10">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-amber-700">DnDCC AI</p>
+                        <p class="text-base text-amber-900">Pomocnik Dungeons & Dragons</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-amber-100 border border-amber-900/30 flex items-center justify-center text-amber-800">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <button id="dndccChatClose" class="text-amber-900 text-xl" aria-label="Zamknij">&times;</button>
+                    </div>
+                </div>
+                <div id="dndccChatMessages" class="px-4 py-3 space-y-3 text-base text-amber-900 h-[35vh] overflow-y-auto"></div>
+                <div class="border-t border-amber-900/20 px-3 py-3 bg-white/80">
+                    <form id="dndccChatForm" class="flex items-center gap-2">
+                        <input id="dndccChatInput" class="flex-1 px-3 py-2 rounded-lg border border-amber-900/20 bg-white/90 text-base" placeholder="Zapytaj o DnD..." />
+                        <button id="dndccChatSend" class="btn-primary px-3 py-2 rounded-lg text-sm font-semibold border border-amber-900/30" type="submit">Wyślij</button>
+                    </form>
+                    <div id="dndccChatError" class="hidden mt-2 text-xs text-red-700"></div>
+                </div>
+            </div>
+        </div>
+    }
 
     <!-- Modal auth (login & register) -->
     <div id="authModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center px-4">
@@ -818,6 +941,119 @@
         });
 
         checkAuth();
+    </script>
+
+    <script>
+        (() => {
+            const widget = document.getElementById('dndccChatWidget');
+            const hasClientUser = !!localStorage.getItem('user');
+            if (!hasClientUser) {
+                widget?.classList.add('hidden');
+                return;
+            }
+            const panel = document.getElementById('dndccChatPanel');
+            const button = document.getElementById('dndccChatButton');
+            const closeBtn = document.getElementById('dndccChatClose');
+            const hint = document.getElementById('dndccChatHint');
+            const messagesEl = document.getElementById('dndccChatMessages');
+            const form = document.getElementById('dndccChatForm');
+            const input = document.getElementById('dndccChatInput');
+            const errorEl = document.getElementById('dndccChatError');
+
+            if (!widget || !panel || !button || !messagesEl || !form || !input) return;
+
+            const messages = [
+                { role: 'assistant', content: 'Czesc! Zapytaj mnie o zasady DnD, klasy, zaklecia albo prowadzenie sesji.' }
+            ];
+
+            function renderMessages() {
+                messagesEl.innerHTML = '';
+                messages.forEach(msg => {
+                    const item = document.createElement('div');
+                    item.className = `chat-message ${msg.role === 'user' ? 'user' : 'assistant'}`;
+                    item.textContent = msg.content;
+                    messagesEl.appendChild(item);
+                });
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+
+            function showError(message) {
+                if (!errorEl) return;
+                errorEl.textContent = message;
+                errorEl.classList.remove('hidden');
+            }
+
+            function clearError() {
+                if (!errorEl) return;
+                errorEl.textContent = '';
+                errorEl.classList.add('hidden');
+            }
+
+            function openChat() {
+                panel.classList.remove('hidden');
+                if (hint) hint.classList.add('hidden');
+                input.focus();
+            }
+
+            function closeChat() {
+                panel.classList.add('hidden');
+                if (hint) hint.classList.remove('hidden');
+            }
+
+            button.addEventListener('click', () => {
+                if (panel.classList.contains('hidden')) {
+                    openChat();
+                } else {
+                    closeChat();
+                }
+            });
+
+            closeBtn?.addEventListener('click', closeChat);
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                clearError();
+                const text = input.value.trim();
+                if (!text) return;
+
+                messages.push({ role: 'user', content: text });
+                input.value = '';
+                renderMessages();
+
+                const payload = messages.slice();
+                const placeholder = { role: 'assistant', content: '...' };
+                messages.push(placeholder);
+                renderMessages();
+
+                input.disabled = true;
+
+                try {
+                    const res = await fetch('/api/chat/dnd', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: payload })
+                    });
+                    if (!res.ok) {
+                        showError('Nie udalo sie uzyskac odpowiedzi AI.');
+                        messages.pop();
+                        renderMessages();
+                        return;
+                    }
+                    const data = await res.json();
+                    placeholder.content = data.reply || 'Brak odpowiedzi.';
+                    renderMessages();
+                } catch {
+                    showError('Blad polaczenia z AI.');
+                    messages.pop();
+                    renderMessages();
+                } finally {
+                    input.disabled = false;
+                    input.focus();
+                }
+            });
+
+            renderMessages();
+        })();
     </script>
 </body>
 </html>
